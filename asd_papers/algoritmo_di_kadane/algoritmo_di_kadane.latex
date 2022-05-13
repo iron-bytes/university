@@ -99,13 +99,9 @@ In quanto $SUM(p,r) < 0.$
 
 Se sappiamo che si verifica questa proprietà allora
 \begin{itemize}
-\item Grazie al punto 1 possiamo dire che $SUM(x,y)$ con $i < x \leq y \leq r$, ovvero $SUM()$ delle sotto-sequenze che iniziano e finiscono nell' intervallo $(i,r]$ sarà sempre minore o uguale a $SUM(i,y).$\\
-Il valore di $SUM(i,y)$ lo si conosce già, pertanto è inutile generare tali sotto-sequenze.
-In altre parole, sia data la sequenza $(i,y)$. Nessuna scelta di $x$ tale che  $i<x\leq r$ può dare luogo a un valore di $SUM(x,y)$ maggiore di $SUM(i,y).$\\
-Poiché il valore di $SUM(i,y)$ è stato scoperto già (in quanto abbiamo già analizzato tutte le sequenze $(i,i),(i,i+1),...,(i,r)$), non è necessario generare la sequenza $(x,y).$\\
-Se per assurdo si avesse che $SUM(x,y) > SUM(i,y)$, la sotto-sequenza localmente massima potrebbe essere $(x,y)$, e dunque sarebbe necessario valutarne il valore della somma.\\
+\item Grazie al punto 1 possiamo dire che $SUM(x,y)$ con $i < x \leq y \leq r$ sarà sempre minore o uguale a $SUM(i,y).$ Poiché il valore di $SUM(i,y)$ lo si conosce già [in quanto abbiamo già analizzato tutte le sequenze $(i,i),(i,i+1),...,(i,r)$], è inutile generare tali sotto-sequenze.
 
-Comunque, da un altro punto di vista, il motivo per non generare sequenze inutili è osservare che poiché la sotto-sequenza $(i,r-1)$ contiene solo elementi non negativi, è chiaro che localmente la sotto-sequenza di somma massima è $(i,r-1).$
+Se per assurdo si avesse che $SUM(x,y) > SUM(i,y)$, la sotto-sequenza localmente massima potrebbe essere $(x,y)$, e dunque sarebbe necessario valutarne il valore della somma.
 \item Grazie al punto $2$ possiamo dire che è inutile analizzare le sequenze $(x,r+k)$ con $x$ nell'intervallo $[i,r]$ perché più avanti si troverà sicuramente una sottosequenza di somma maggiore. 
 \end{itemize}
 
