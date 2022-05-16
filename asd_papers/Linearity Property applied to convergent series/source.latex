@@ -25,12 +25,12 @@ $$  \sum \Theta(f(n)) \in \Theta(\sum f(n))  $$
 \subsection{Assumptions}
 $$\sum \Theta(f(n))$$
 $$and$$
-$$\Theta(\sum f(n))$$
-could also imply that $f(n)$ is not the same function throughout each sum, but variable accordingly the iterator variable of the sum, so we assume that
-$$\sum \Theta(f(n))$$
+$$\Theta(\sum f(n))$$ 
+could also imply that $f(n)$ is not the same function throughout each sum, but variable accordingly the iterator variable of the sum, so we assume that 
+$$\sum \Theta(f(n))$$ 
 means
 $$\Theta(h(n)) + \Theta(g(n)) + ...$$
-(similarly for $\Theta(\sum f(n))$), so it's the most general way since the functions are absolutely indipendent from each other.
+(similarly for $\Theta(\sum f(n))$), so it's the most general way.
 
 \subsection{Proof}
 We prove the theorem by proving that $\Theta(h(n)) + \Theta(g(n)) \in \Theta(h(n) + g(n))$.
