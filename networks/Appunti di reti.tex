@@ -1945,7 +1945,7 @@ OSPF permette di creare delle partizioni all'interno dell'AS: Ogni sotto-AS (chi
 Per determinare i percorsi per le coppie sorgente-destinazione che passano per più sistemi autonomi è necessario un algoritmo inter-AS, come BGP. Si tratta di un protocollo di tipo Distance-Vector decentealizzato e asincrono.
 
 \subsubsection*{5.4.1 Il ruolo di BGP}
-BGP determina le tabelle di inoltro esterne all'AS. BGP non instrada però verso uno specifico indirizzo, bensì verso prefissi CIDR, ovvero delle sottoreti, come ad esempio \texttt{138.16.68.0/22}.
+BGP determina le tabelle di inoltro esterne all'AS. BGP non instrada però verso uno specifico indirizzo, bensì verso delle sottoreti, come ad esempio \texttt{138.16.68.0/22}. Un sistema autonomo può anche avere più sottoreti ma non è obbligatorio che debbano essere tutte annunciate.
 
 BGP
 \begin{itemize}
@@ -1953,7 +1953,10 @@ BGP
 	\item Determinare il percorso migliore verso una sottorete
 \end{itemize}
 
+\subsubsection*{5.4.2 Distribuzione delle informazioni dei cammini in BGP}
+Ogni router in ogni sistema autonomo funge o da router gateway, ovvero direttamente connesso a uno o più router di altri sistemi autonomi o da router interno, vale a dire connesso solo a host e altri router interni allo stesso sistema autonomo.
 
+Come viene comunicata l'esistenza di una sottorete verso tutti i sistemi autonomi? In modo molto semplice: una sottorete si annuncia a un AS il quale provvede a comunicarlo a tutti gli AS con cui confina, ripetendo fintantoché tutti i sistemi autonomi non hanno registrato la nuova sottorete. Un AS comunica con altri AS tramite i router di bordo: possono esserci anche più router di bordo in uno stesso Sistema Autonomo non direttamente connessi; in tal caso servirà mandare internamente all'AS dei messaggi BGP (iBGP). I messaggi BGP scambiati tra due router gateway di due AS diversi prendono il nome di messaggi eBGP (external). \textbf{SCRIVERE MEGLIO NON MI PIACE, TROPPO CONFUSO}
 
 
 
