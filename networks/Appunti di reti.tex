@@ -1909,6 +1909,52 @@ Nel DV ciascun nodo dialoga solo con i vicini direttamente connessi, informandol
 
 Nessuno dei due è Pareto-superior all'altro.
 
+\subsection*{5.3 Sistemi autonomi e OSPF}
+Fino ad ora abbiamo visto i router come unità che eseguono tutti lo stesso algoritmo di instradamento. Questa visione omogenea dei router risulta problematica per i seguenti motivi:
+\begin{itemize}
+	\item Scalabilità: Al crescere del numero dei router il tempo richiesto per calcolare, memorizzare e comunicare le informazioni di instradamento diventa proibitivo. Inoltre archiviare le informazioni di instradamento su ognuno di essi richiederebbe un'enorme quantità di memoria
+	\item Autonomia amministrativa: se si richiedesse che tutti i router del mondo eseguano lo stesso algoritmo di instradamento, significherebbe che gli ISP non avrebbero autonomia amministrativa e libertà di scegliere di utilizzare un algoritmo di instradamento piuttosto che un altro
+\end{itemize}
+
+Questi problemi possono essere risolti organizzando i router in sistemi autonomi (AS), composti da gruppi di router sotto lo stesso controllo amministrativo.
+
+Un ISP può scegliere di non utilizzare AS, di unire sotto un unico sistema autonomo tutti i propri router o di partizionare la propria rete in più sistemi autonomi. Ogni sistema autonomo ha un numero identificativo univoco assegnato dallo ICANN (come gli indirizzi IP).
+
+I router di un AS eseguono tutti lo stesso algoritmo di instradamento ma router posti in AS differenti possono usare differenti algoritmi di instradamento.
+
+\subsubsection*{Instradamento intra-AS: OSPF}
+In nessun caso è possibile usare direttamente gli algoritmi di Dijkstra e di Bellman-Ford nel mondo reale. Essi sono infatti concettuali in quanto non risolvono problemi pratici come 
+\begin{itemize}
+	\item Come scopro i vicini?
+	\item Che metriche uso?
+	\item Come evito loop?
+	\item Come memorizzo le informazioni?
+	\item Che protocolli sottostanti uso per comunicare?
+	\item Ogni quanto invio informazioni?
+	\item Come autentico gli altri router?
+	\item ...
+\end{itemize}
+
+per questo motivo esistono algoritmi quali OSPF, ISIS, RIP e EIGRP che risolvono questi problemi nella pratica, usando internamente talvolta l'algoritmo LS talvolta DV. Questi algoritmi sono intra-AS, ovverosia funzionano solo all'interno di un sistema autonomo
+
+Sofferiamoci su OSPF: è un algoritmo di tipo Link-State che utilizza la tecnica del flooding (inondamento di informazioni) affinché tutti i router dell'AS abbiano una mappa della rete aggiornata e completa in modo che l'algoritmo di Dijkstra possa operare efficacemente.
+
+OSPF permette di creare delle partizioni all'interno dell'AS: Ogni sotto-AS (chiamata Area) esegue l'algoritmo Link-State localmente e comunica con altre aree mediante router di confine. Ciò permette più flessibilità e scalabilità in grandi reti, evitando frequenti flooding in tutta l'AS.
+
+\subsection*{5.4 Instradamento inter-AS: BGP}
+Per determinare i percorsi per le coppie sorgente-destinazione che passano per più sistemi autonomi è necessario un algoritmo inter-AS, come BGP. Si tratta di un protocollo di tipo Distance-Vector decentealizzato e asincrono.
+
+\subsubsection*{5.4.1 Il ruolo di BGP}
+BGP determina le tabelle di inoltro esterne all'AS. BGP non instrada però verso uno specifico indirizzo, bensì verso prefissi CIDR, ovvero delle sottoreti, come ad esempio \texttt{138.16.68.0/22}.
+
+BGP
+\begin{itemize}
+	\item Consente a ciascuna sottorete di comunicare la propria esistenza al resto di Internet
+	\item Determinare il percorso migliore verso una sottorete
+\end{itemize}
+
+
+
 
 
 
