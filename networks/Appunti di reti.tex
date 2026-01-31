@@ -2017,7 +2017,18 @@ Il protocollo ICMP (Internet Control Message Protocol) viene utilizzato da host 
 
 I messaggi ICMP vengono trasportati come payload di IP, esattamente come segmenti TCP e UDP. Nel datagramma IP è specificato ICMP come protocollo di livello superiore.
 
+I messaggi ICMP contengono:
+\begin{itemize}
+	\item Un campo "Tipo ICMP" e un campo "Codice" che insieme specificano la tipologia di messaggio ICMP
+	\item Se rappresenta un messaggio di errore, contiene anche l'header del datagramma IP che ha provocato l'errore. Non è presente in messaggi informativi (come \textit{ping})
+\end{itemize}
 
+Vediamo come funziona traceroute: il programma client invia una serie di datagrammi IP il cui payload è un segmento UDP con un numero di porta improbabile e con un TTL crescente partendo da 1. Quando l'n-esimo router riceve l'n-esimo datagramma, nota che TTL è scaduto, pertanto lo scarta e invia un messaggio di errore ICMP (\textit{TTL expired}).
+
+Ma come fa il programma client a sapere quando fermarsi? Dato che il datagramma contiene un segmento UDP con un numero di porta improbabile, quando giunge a un host (che quindi implementa lo strato di livello di trasporto) quest'ultimo restituisce un errore ICMP di tipo diverso, ovvero \textit{Destination port unreachable}. A questo punto il client smetterà di inviare datagrammi.
+
+\section*{5.8 Riepilogo}
+Abbiamo visto che esistono due approcci per la costruzione di un piano di controllo: il controllo tradizionale (nel quale ogni singolo router esegue un algoritmo di instradamento e comunica con gli altri) e il Software-Defined Networking nel quale un controller logicamente centralizzato calcola e gestisce le tabelle di inoltro che devono essere utilizzate dai router.
 
 
 
