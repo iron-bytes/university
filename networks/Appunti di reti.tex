@@ -1909,7 +1909,7 @@ Nel DV ciascun nodo dialoga solo con i vicini direttamente connessi, informandol
 
 Nessuno dei due è Pareto-superior all'altro.
 
-\subsection*{5.3 Sistemi autonomi e OSPF}
+\section*{5.3 Sistemi autonomi e OSPF}
 Fino ad ora abbiamo visto i router come unità che eseguono tutti lo stesso algoritmo di instradamento. Questa visione omogenea dei router risulta problematica per i seguenti motivi:
 \begin{itemize}
 	\item Scalabilità: Al crescere del numero dei router il tempo richiesto per calcolare, memorizzare e comunicare le informazioni di instradamento diventa proibitivo. Inoltre archiviare le informazioni di instradamento su ognuno di essi richiederebbe un'enorme quantità di memoria
@@ -1941,10 +1941,10 @@ Sofferiamoci su OSPF: è un algoritmo di tipo Link-State che utilizza la tecnica
 
 OSPF permette di creare delle partizioni all'interno dell'AS: Ogni sotto-AS (chiamata Area) esegue l'algoritmo Link-State localmente e comunica con altre aree mediante router di confine. Ciò permette più flessibilità e scalabilità in grandi reti, evitando frequenti flooding in tutta l'AS.
 
-\subsection*{5.4 Instradamento inter-AS: BGP}
+\section*{5.4 Instradamento inter-AS: BGP}
 Per determinare i percorsi per le coppie sorgente-destinazione che passano per più sistemi autonomi è necessario un algoritmo inter-AS, come BGP. Si tratta di un protocollo di tipo Distance-Vector decentealizzato e asincrono.
 
-\subsubsection*{5.4.1 Il ruolo di BGP}
+\subsection*{5.4.1 Il ruolo di BGP}
 BGP determina le tabelle di inoltro esterne all'AS. BGP non instrada però verso uno specifico indirizzo, bensì verso delle sottoreti, come ad esempio \texttt{138.16.68.0/22}. Un sistema autonomo può anche avere più sottoreti ma non è obbligatorio che debbano essere tutte annunciate.
 
 BGP
@@ -1953,10 +1953,72 @@ BGP
 	\item Determinare il percorso migliore verso una sottorete
 \end{itemize}
 
-\subsubsection*{5.4.2 Distribuzione delle informazioni dei cammini in BGP}
+\subsection*{5.4.2 Distribuzione delle informazioni dei cammini in BGP}
 Ogni router in ogni sistema autonomo funge o da router gateway, ovvero direttamente connesso a uno o più router di altri sistemi autonomi o da router interno, vale a dire connesso solo a host e altri router interni allo stesso sistema autonomo.
 
-Come viene comunicata l'esistenza di una sottorete verso tutti i sistemi autonomi? In modo molto semplice: una sottorete si annuncia a un AS il quale provvede a comunicarlo a tutti gli AS con cui confina, ripetendo fintantoché tutti i sistemi autonomi non hanno registrato la nuova sottorete. Un AS comunica con altri AS tramite i router di bordo: possono esserci anche più router di bordo in uno stesso Sistema Autonomo non direttamente connessi; in tal caso servirà mandare internamente all'AS dei messaggi BGP (iBGP). I messaggi BGP scambiati tra due router gateway di due AS diversi prendono il nome di messaggi eBGP (external). \textbf{SCRIVERE MEGLIO NON MI PIACE, TROPPO CONFUSO}
+Come viene comunicata l'esistenza di una sottorete verso tutti i sistemi autonomi? In modo molto semplice: una sottorete si annuncia a un AS il quale provvede a comunicarlo a tutti gli AS con cui confina, ripetendo fintantoché tutti i sistemi autonomi non hanno registrato la nuova sottorete. 
+
+Un AS comunica con altri AS tramite i router di bordo: possono esserci anche più router di bordo in uno stesso Sistema Autonomo e possono anche essere non direttamente connessi; in tal caso essi dovranno comunicare mandando messaggi BGP all'interno dell Sistema Autonomo denominati messaggi BGP interni (iBGP). 
+
+I messaggi BGP scambiati tra due router gateway di due AS diversi prendono il nome di messaggi eBGP (external).
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{images/eBPG_and_iBGP.png}
+	\caption{Connessioni eBGP e iBGP}
+	\label{fig:esempio}
+\end{figure}
+
+\texttt{1c, 2a, 2c, 3a} e \texttt{3d} sono router di bordo. A titolo di esempio, \texttt{2a} e \texttt{2c} comunicano scambiandosi messaggi BGP interni, mentre \texttt{2c} e \texttt{3a} comunicano scambiandosi messaggi BGP esterni.
+
+\subsection*{5.4.3 Selezione delle rotte migliori}
+Quando un router annuncia un prefisso CIDR, aggiunge anche degli attributi BGP:
+\begin{itemize}
+	\item AS-PATH: Elenca i sistemi autonomi attraverso i quali è passato l'annuncio del prefisso. I router utilizzano tale attributo per evitare annunci ripetuti (se già vedono il loro identificativo al suo interno non lo inoltrano)
+	\item NEXT-HOP: Quando un router di bordo di un AS (\textit{x}) riceve un messaggio eBGP da un router di bordo (\textit{y}) di un altro AS  che gli indica l'esistenza di una sottorete, memorizza l'indirizzo IP di \textit{y} come attributo NEXT-HOP che gli permette di sapere a chi inoltrare i pacchetti per raggiungere quel prefisso annunciato. Per un solo prefisso possono esserci più NEXT-HOP. Il router NEXT-HOP viene annunciato dal router di bordo a tutti i router interni
+\end{itemize}
+
+\subsubsection*{Instradamento Hot Potato}
+Nell'instradamento a patata bollente si cerca di uscire dall'AS il prima possibile, ovverosia si inoltra il pacchetto sul percorso più breve che gli permette di uscire dal Sistema Autonomo. Equivalentemente, si utilizza il percorso verso il NEXT-HOP più vicino che permette di inoltrare il pacchetto alla sottorete desiderata.
+
+Questo algoritmo viene considerato egoista in quanto non garantisce affatto che sia il percorso globalmente migliore per quella destinazione. Se infatti ci si trova molto vicino a un NEXT-HOP, verrà utilizzato quest'ultimo, ma magari il suo AS è molto lontano dalla sottorete di destinazione che sarebbe stata più vicina utilizzando un altro NEXT-HOP iniziale.
+
+\subsection*{5.4.4 Anycast IP}
+In molte applicazioni si è interessati a replicare lo stesso contenuto su server differenti sparsi in diverse aree geografiche e che un utente acceda al contenuto dal server che gli è più vicino.
+
+La funzionalità Anycast IP di BGP ci viene in soccorso. Ad esempio una CDN assegna lo stesso indirizzo IP su due o più server fisici differenti i quali annunciano la stessa sottorete al "mondo" BGP. Quando un router BGP riceve annunci da più percorsi li tratta come se fossero percorsi diversi verso la stessa area fisica, anche se sono percorsi verso luoghi diversi.
+
+Il risultato è che gli utenti vengono instradati automaticamente verso l’istanza "più vicina".
+
+Anycast IP è però sconsigliabile in contesti stateful in quanto un cambiamento delle tabelle di routing potrebbe far indirizzare il client a un diverso server fisico durante una sessione di comunicazione, interrompendola. Per questo AnycastIP si usa in contesti stateless, come DNS.
+
+\section*{SDN}
+Un'architettura SDN ha queste caratteristiche fondamentali:
+
+\begin{enumerate}
+	\item Inoltro basato sui flussi: L'inoltro dei pacchetti può essere fatto da un router sulla base del valore dei campi dell'intestazione a livello di trasporto, di rete o di collegamento
+	\item Consente la separazione del piano dati dal piano di controllo: Il piano dei dati consiste di router che eseguono le regole \textit{match-action}. Il piano di controllo consiste di server e software che determinano e gestiscono le tabelle dei flussi dei router. Pertano la rete risulta programmabile da software
+\end{enumerate}
+
+\subsection*{5.5.1 Il piano di controllo SDN: controller SDN e applicazioni di controllo}
+Il piano di controllo si divide in due componenti: il controller SDN e le applicazioni di controllo SDN.
+
+Le funzionalità del controller SDN possono essere divise in tre livelli:
+\begin{enumerate}
+	\item Livello di comunicazione: effettua le comunicazioni tra il controller SDN e i dispositivi di rete collegati
+	\item Livello di monitoraggio dello stato della rete: Le decisioni di controllo richiedono che il controller abbia informazioni aggiornate circa lo stato di host, collegamenti, router e altri dispositivi
+	\item Interfaccia di comunicazione con il livello applicazione di controllo della rete: Le applicazioni sono quelle che leggono/scrivono le tabelle dei flussi
+\end{enumerate}
+
+I router inviano informazioni sul loro stato e sui collegamenti a loro connessi al controller SDN, senza scambiare tali informazioni direttamente tra loro. Inoltre, essi non eseguono autonomamente algoritmi di instradamento; è il controller SDN che lo fa. Ciò consente di poter facilmente cambiare l' algoritmo di instradamento semplicemente cambiando il software in un unico punto, anziché doverlo cambiare in ogni router.
+
+\section*{5.6 ICMP}
+Il protocollo ICMP (Internet Control Message Protocol) viene utilizzato da host e router per scambiarsi informazioni. È un protocollo a livello di rete.
+
+I messaggi ICMP vengono trasportati come payload di IP, esattamente come segmenti TCP e UDP. Nel datagramma IP è specificato ICMP come protocollo di livello superiore.
+
+
+
 
 
 
