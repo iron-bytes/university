@@ -1424,7 +1424,7 @@ Il ruolo del piano dei dati di ciascun router intermedio è quello di inoltrare 
 	\item Instradamento (routing): Il livello di rete deve determinare il percorso che i pacchetti devono seguire all'interno della rete, determinati per mezzo degli algoritmi di instradamento. La funzione di instradamento è implementata nel piano di controllo. L'instradamento è solitamente implementato in software.
 \end{itemize}
 
-I router estraggono i campi di intestazione dai datagrammi, che li usano come indice nella tabella di inoltro. Il valore trovato indica a quale interfaccia di uscita il segmento debba essere diretto.
+I router estraggono i campi di intestazione dai datagrammi, che li usano come indice di ricerca nella tabella di inoltro. Il valore trovato indica a quale interfaccia di uscita il segmento debba essere diretto.
 \begin{table}[h!]
 	\centering
 	\begin{tabular}{|c|c|}
@@ -1467,7 +1467,7 @@ Benché possiamo dare spazio alla fantasia con i servizi che un livello di rete 
 	\item Porte di ingresso
 	\item Porte di uscita
 	\item Struttura di commutazione: connette fisicamente le porte di ingresso a quelle di uscita
-	\item Processore di instradamento: Nella versione non SDN (versione tradizionale) esegue i protocolli di instradamento, mentre nella versione SDN è responsabile della comunicazione con il controller remoto. In tutti i casi mantiene le tabelle di inoltro
+	\item Processore di instradamento: Nella versione non SDN (versione tradizionale) esegue i protocolli di instradamento, mentre nella versione SDN è responsabile della comunicazione con il controller remoto. In entrambi i casi legge l'intestazione del datagramma e la tabella di inoltro per individuare l'interfaccia di uscita.
 \end{itemize}
 
 Le porte effettuano le dovute operazioni a livello 1 e 2 della pila TCP/IP per comunicare con l'altro capo del mezzo fisico.
@@ -1477,8 +1477,6 @@ L'inoltro può essere:
 	\item Basato sulla destinazione: il datagramma indica la sua destinazione finale e il router lo inoltra sull'uscita adatta in base all'informazione fornita
 	\item Generalizzato: Come nel precedente, ma oltre alla destinazione finale vengono presi ulteriori fattori come l'origine. la dimensione ecc...
 \end{itemize}
-
-In entrambi i casi è necessario un algoritmo che indichi su quale porta in uscita il datagramma debba essere indirizzato.
 
 \subsection*{4.2.1 Elaborazione alle porte di ingresso e inoltro basato sull'indirizzo di destinazione}
 Un'implementazione elementare della tabella di inoltro potrebbe essere quella di creare una riga per ogni destinazione ma poiché gli indirizzi IP sono a 32 bit, la tabella sarebbe enorme.
@@ -1551,22 +1549,18 @@ Quando queste code crescono, la memoria dei router può esaurirsi e quindi può 
 
 Sia $R_{switch}$ il tasso al quale i pacchetti vengono trasferiti dalla porta di input a quella di output e che i pacchetti arrivino alle porte di input ed escano dalle porte di output a un tasso di $R_{line}$ e che ci siano $N$ porte da ciascun lato. Se $R_{switch} \geq N \times R_{line}$ i pacchetti verranno tutti smistati prima che ne arrivino altri. Infatti anche supponendo il caso peggiore in cui arrivino $N$ pacchetti simultaneamente alle $N$ porte di input e dovranno essere inoltrati alla medesima porta di output, avranno il tempo di essere smistati prima che ne sopraggiungano altri.
 
-In questo caso l'accodamento sarà assente nelle porte di input se i pacchetti arrivano cadenzati adeguatamente (no "burst"), tuttavia, possono verificarsi code nelle porte di output, come vedremo di qui a breve.
-
 \subsubsection*{Accodamento in uscita}
-Nonostante una struttura di commutazione molto veloce, è possibile che si crei accodamento in uscita. Perché? Innanzitutto notiamo, continuando con l'esempio sopra riportato, che nel caso in cui $N$ pacchetti giungano alla porta di uscita, quest'ultima può trasmettere solo un pacchetto alla volta. Per cui $N-1$ pacchetti dovranno mettersi in coda sulla porta di uscita prima di essere trasmessi. Inoltre l'uscita può trasmettere solo a $R_{line}$ e quindi la coda tenderà a crescere indefinitamente.
+Con una struttura di commutazione molto veloce, è possibile che si crei accodamento in uscita. Perché? Innanzitutto notiamo, continuando con l'esempio sopra riportato, che nel caso in cui $N$ pacchetti giungano alla porta di uscita, quest'ultima può trasmettere solo un pacchetto alla volta. Per cui $N-1$ pacchetti dovranno mettersi in coda sulla porta di uscita prima di essere trasmessi. Inoltre l'uscita può trasmettere solo a $R_{line}$ e quindi la coda tenderà a crescere indefinitamente.
 
 D'altro canto se la struttura di commutazione non è sufficientemente veloce potrebbero non formarsi code alle porte di output. In questo caso ci saranno accodamenti alle porte di input.
 
 \subsubsection*{Accodamento in ingresso}
-Se la struttura di commutazione è abbastanza veloce e l'arrivo di pacchetti è adeguatamente cadenzato, non si formeranno code nella singola porta di input, tuttavia è possibile che un pacchetto debba mettersi in attesa lo stesso perché sta aspettando il trasferimento di un pacchetto da un'altra porta di input verso la propria porta di output.
+Se la struttura di commutazione è abbastanza veloce e l'arrivo di pacchetti è adeguatamente cadenzato (no "burst" [cap. 1]), non si formeranno code nella singola porta di input, tranne nel seguente caso: È possibile che un pacchetto debba mettersi in attesa lo stesso perché sta aspettando il trasferimento di un pacchetto da un'altra porta di input verso la propria porta di output.
 
-Facciamo un esempio: due pacchetti su due porte di ingresso diverse devono uscire sulla stessa porta di uscita. La porta di uscita non può riceverli entrambe contemporaneamente quindi uno dei pacchetti deve rimanere in attesa nella porta di input.
-
-Se vediamo tutte le porte di input come un' "unica" porta, allora sì, può verificarsi una coda, ma è comunque negligibile in quanto non tenderebbe a crescere indefinitamente.
+Facciamo un esempio: due pacchetti su due porte di ingresso diverse devono uscire sulla stessa porta di uscita. La porta di uscita non può riceverli entrambi contemporaneamente quindi uno dei pacchetti deve rimanere in attesa nella porta di input.
 \\\\
 Che cosa avviene invece avviene se la struttura di commutazione non è sufficientemente veloce?
-In questo caso può verificarsi accodamento alla singola porta di ingresso.
+In questo caso sicuramente la coda aumenterebbe all'infinito
 
 \subsubsection*{Blocco in testa alla coda}
 Immaginiamo ci siano due porte di uscita: $O1$ e $O2$, una porta di ingresso, $I1$ al cui interno ci sono due pacchetti $P1$, indirizzato alla porta $O1$ e $P2$ indirizzato alla porta $O2$. $P1$ è schedulato per uscire dalla coda prima di $P2$.
@@ -1578,13 +1572,8 @@ Ebbene, se $P1$ è bloccato nella coda di input perché in quel momento $O1$ è 
 \end{itemize}
 allora anche $P2$ è bloccato, anche se magari $O2$ è libera. Questo fenomeno è noto come "Blocco in testa alla coda", ovvero quando un pacchetto in ingresso deve comunque aspettare anche se la sua destinazione è libera.
 
-
-In assenza di sufficiente memoria per inserire nel buffer (di ingresso o di uscita) il nuovo pacchetto occorrerà stabilire se scartare esso o uno dei pacchetti già in coda.
-
-Uno schedulatore di pacchetti deve stabilire in quale ordine trasmetterli.
-
 \subsection*{4.2.5 Schedulazione di pacchetti}
-Bisogna determinare in che ordine i pacchetti vengono trasmessi sulla porta di uscita.
+Bisogna determinare in che ordine i pacchetti vengono trasmessi dalla porta di uscita verso l'esterno.
 
 \subsubsection*{FIFO: First In First Out}
 I pacchetti vengono trasmessi nello stesso ordine con cui sono arrivati in coda.
@@ -1637,9 +1626,7 @@ La massima quantità di dati che un frame a livello di collegamento può traspor
 
 Se tra host mittente e host destinatario ci sono solo collegaenti Ethernet, allora si costruirebbero datagrammi che non eccedono mai 1500 byte, ma nella realtà dei fatti possono esserci diversi protocolli a livello di collegamento tra i due pertanto al mittente non è nota la dimensione massima che può inviare.
 
-La soluzione consiste nel frammentare i dati del datagramma IP in due o più datagrammi  IP più piccoli, detti frammenti. Quest'ultimi dovranno però essere riassemblati prima di raggiungere il livello di trasporto nella destinazione in quanto TCP e UDP si aspettano di ricevere segmenti completi dal livello di rete.
-
-I datagrammi vengono riassemblati nei sistemi periferici anziché che nei router per motivi di prestazioni.
+La soluzione consiste nel frammentare i dati del datagramma IP in due o più datagrammi  IP più piccoli, detti frammenti. Quest'ultimi dovranno però essere riassemblati prima di raggiungere il livello di trasporto nella destinazione in quanto TCP e UDP si aspettano di ricevere segmenti completi dal livello di rete. L'operazione di riassemblaggio viene fatta nei sistemi periferici (host finali).
 
 I campi atti allo scopo della frammentazione e riassemblaggio sono i campi identificatore, flag e offset.
 
@@ -1677,7 +1664,7 @@ Poiché Internet è semplicemente un insieme di sottoreti, \texttt{192.168.1.0/2
 Esistono diverse tipologie di Indirizzi IP:
 \begin{itemize}
 	\item Indirizzo di broadcast: \texttt{255.255.255.255}. Quando un host emette un datagramma con questa destinazione, il router lo inoltra a tutti gli host della sua sottorete. In teoria potrebbe inoltrarlo anche alle sottoreti confinanti (raggiungendo ogni host terrestre) ma solitamente non lo fa
-	\item Indirizzo di loopback: \texttt{127.0.0.1}. Un host che emette un datagramma con questo indirizzo IP lo inoltra a sè stesso
+	\item Indirizzo di loopback: \texttt{127.0.0.1}. Un host che emette un datagramma con questo indirizzo IP lo inoltra a sè stesso. In realtà \texttt{127.0.0.1} è solo quello più usato, ma l'intero blocco \texttt{127.0.0.0/8} (da \texttt{127.0.0.0} a \texttt{127.255.255.255}) è riservato al loopback
 	\item Indirizzi IP pubblici e privati: alcune classi di indirizzi IP sono privati: un host che riceve un pacchetto con destinazione rappresentata da un indirizzo IP privato non verrà inoltrato alle sottoreti confinanti
 \end{itemize}
 
@@ -1696,10 +1683,10 @@ DHCP è un protocollo client-server. Ogni sottorete dispone di un server DHCP.
 I quattro passi per ricevere queste informazioni sono:
 
 \begin{enumerate}
-	\item Individuazione del server DHCP: Questa operazione è svolta usando un messaggio DHCP discover che un client invia in pacchetto UDP sulla porta 67. Poiché l'host non conosce l'indirizzo IP della rete alla quale è collegato e ancor meno l'indirizzo di un server DHCP. Per questo motivo la destinazione viene impostata all'indirizzo di broadcast \texttt{255.255.255.255} e come sorgente viene impostato il valore \texttt{0.0.0.0}
-	\item Offerta del server DHCP: Un server DHCP che riceve questo messaggio risponde con un DHCP offer che contiene l'indirizzo IP proposto al client, la maschera di sottorete e la durata della connessione. Anche questo messaggio viene inviato a \texttt{255.255.255.255} in quanto il client non ha ancora un indirizzo
-	\item Richiesta DHCP: Se ci sono più offerte, il client ne sceglie una e manda un DHCP Request in broadcast che riporta i parametri di configurazione
-	\item Il server risponde con un DHCP ACK, sempre in broadcast. Da questo punto in poi il client inizierà a usare la configurazione scelta.
+	\item Individuazione del server DHCP: Questa operazione è svolta usando un messaggio \textit{DHCP discover} che un client invia in pacchetto UDP sulla porta 67. Poiché l'host non conosce l'indirizzo IP della rete alla quale è collegato e ancor meno l'indirizzo di un server DHCP. Per questo motivo la destinazione viene impostata all'indirizzo di broadcast \texttt{255.255.255.255} e come sorgente viene impostato il valore \texttt{0.0.0.0}
+	\item Offerta del server DHCP: Un server DHCP che riceve questo messaggio risponde con un \textit{DHCP offer} che contiene l'indirizzo IP proposto al client, la maschera di sottorete e la durata della connessione. Anche questo messaggio viene inviato a \texttt{255.255.255.255} in quanto il client non ha ancora un indirizzo
+	\item Richiesta DHCP: Se ci sono più offerte, il client ne sceglie una e manda un \textit{DHCP Request} in broadcast che riporta i parametri di configurazione
+	\item Il server risponde con un \textit{DHCP ACK}, sempre in broadcast. Da questo punto in poi il client inizierà a usare la configurazione scelta.
 \end{enumerate}
 
 Si noti che ogni volta che un nodo si connette a una sottorete, con la tecnica del DHCP avrà un indirizzo (probabilmente) sempre diverso, pertanto risulta impossibile mantenere una connessione TCP mentre si è in movimento. 
@@ -1726,13 +1713,13 @@ Le differenze più significative tra IPv4 e IPv6 sono:
 \begin{itemize}
 	\item Indirizzamento esteso: I 32 bit di IPv4 passano a 128
 	\item Intestazione ottimizza: Alcuni campi di IPv4 sono stati eliminati rendendo l'intestazione a lunghezza fissa di 40 byte. La lunghezza fissa migliora le prestazioni
-	\item Etichettatura dei flussi: IPv6 permette al mittente di rihiedere un servizio speciale come ad esempio una qualità del servizio diverso e la trasmissione in tempo reale
+	\item Etichettatura dei flussi: IPv6 permette al mittente di etichettare un flusso IPv6 in modo che tutti i datagrammi dello stesso flusso ricevano lo stesso trattamento
 \end{itemize}
 
 In un datagramma IPv6 sono definiti i seguenti campi:
 \begin{itemize}
 	\item Versione di IP
-	\item Classe do traffico: Può essere utilizzato per attribuire priorità a determinati datagrammi
+	\item Classe di traffico: Equivale al campo "Tipo di Servizio" di IPv4
 	\item Etichetta di flusso: Utilizzato per identificare un flusso di datagrammi. Identificare un flusso permette di richiedere un servizio speciale per quest'ultimo
 	\item Lunghezza del payload
 	\item Intestazione successiva: Identifica il protocollo del livello di trasporto al quale verranno consegnati i dati contenuti nei datagrammi

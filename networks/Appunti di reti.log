@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.10.18)  1 FEB 2026 17:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.10.18)  1 FEB 2026 22:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -841,60 +841,54 @@ Capitolo 4.
 File: images/CommutazioneTramiteBus.png Graphic file (type png)
 <use images/CommutazioneTramiteBus.png>
 Package pdftex.def Info: images/CommutazioneTramiteBus.png  used on input line 
-1533.
+1531.
 (pdftex.def)             Requested size: 135.89174pt x 135.88232pt.
 <images/CommutazioneReteDiInterconnessione.png, id=198, 724.95844pt x 472.76625
 pt>
 File: images/CommutazioneReteDiInterconnessione.png Graphic file (type png)
 <use images/CommutazioneReteDiInterconnessione.png>
 Package pdftex.def Info: images/CommutazioneReteDiInterconnessione.png  used on
- input line 1539.
+ input line 1537.
 (pdftex.def)             Requested size: 135.89174pt x 88.6146pt.
  [51 <./images/CommutazioneTramiteBus.png (PNG copy)>]
-Underfull \hbox (badness 10000) in paragraph at lines 1566--1570
+Underfull \hbox (badness 10000) in paragraph at lines 1564--1568
 
  []
 
 [52 <./images/CommutazioneReteDiInterconnessione.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1598--1602
+Underfull \hbox (badness 10000) in paragraph at lines 1591--1595
 
  []
 
-[53]
-Overfull \hbox (4.75398pt too wide) in paragraph at lines 1642--1643
-[]\OT1/cmr/m/n/10 I data-grammi ven-gono ri-assem-blati nei sis-temi per-iferic
-i anzich^^Se che nei router per mo-tivi di prestazioni. 
- []
-
-[54]
-Underfull \hbox (badness 10000) in paragraph at lines 1658--1662
+[53] [54]
+Underfull \hbox (badness 10000) in paragraph at lines 1649--1653
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1669--1674
+Underfull \hbox (badness 10000) in paragraph at lines 1660--1665
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1669--1674
+Underfull \hbox (badness 10000) in paragraph at lines 1660--1665
 
  []
 
 [55]
-Overfull \hbox (25.00406pt too wide) in paragraph at lines 1708--1709
+Overfull \hbox (25.00406pt too wide) in paragraph at lines 1699--1700
 \OT1/cmr/m/n/10 Esistono in-nu-merevoli host (in-ter-facce) con lo stesso in-d-
 i-rizzo IP pri-vato, ma come viene gestito l'indirizzamento
  []
 
 [56]
-Overfull \hbox (1.86626pt too wide) in paragraph at lines 1728--1729
+Overfull \hbox (1.86626pt too wide) in paragraph at lines 1719--1720
 []\OT1/cmr/m/n/10 Intestazione ot-timizza: Al-cuni campi di IPv4 sono stati eli
 m-i-nati ren-dendo l'intestazione a lunghezza
  []
 
 [57]
-Overfull \hbox (16.94963pt too wide) in paragraph at lines 1764--1765
+Overfull \hbox (16.94963pt too wide) in paragraph at lines 1755--1756
 []\OT1/cmr/m/n/10 Ogni riga in una tabella di in-oltro match-action con-tiene (
 1) un in-sieme di val-ori dei campi dell'intestazione
  []
@@ -904,17 +898,17 @@ Capitolo 5.
 [59
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1879--1881
+Underfull \hbox (badness 10000) in paragraph at lines 1870--1872
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1879--1881
+Underfull \hbox (badness 10000) in paragraph at lines 1870--1872
 
  []
 
 [60]
-Underfull \hbox (badness 10000) in paragraph at lines 1892--1896
+Underfull \hbox (badness 10000) in paragraph at lines 1883--1887
 
  []
 
@@ -922,7 +916,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1892--1896
 <images/eBPG_and_iBGP.png, id=237, 1262.7175pt x 550.055pt>
 File: images/eBPG_and_iBGP.png Graphic file (type png)
 <use images/eBPG_and_iBGP.png>
-Package pdftex.def Info: images/eBPG_and_iBGP.png  used on input line 1992.
+Package pdftex.def Info: images/eBPG_and_iBGP.png  used on input line 1983.
 (pdftex.def)             Requested size: 452.9679pt x 197.31462pt.
  [63 <./images/eBPG_and_iBGP.png>] [64] [65] (./Appunti di reti.aux)
 
@@ -958,7 +952,7 @@ onts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
 ublic/amsfonts/cm/cmtt8.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1
 000.pfb>
-Output written on "Appunti di reti.pdf" (65 pages, 1994690 bytes).
+Output written on "Appunti di reti.pdf" (65 pages, 1997266 bytes).
 PDF statistics:
  326 PDF objects out of 1000 (max. 8388607)
  204 compressed objects within 3 object streams
