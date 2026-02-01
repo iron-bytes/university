@@ -14,6 +14,8 @@
 \usepackage{enumitem}
 \usepackage{float}
 \usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
 \renewcommand{\contentsname}{Indice}
 % Redefine the caption format to remove "Figure" and the number
 \captionsetup[figure]{labelformat=empty}
@@ -1422,7 +1424,7 @@ Il ruolo del piano dei dati di ciascun router intermedio è quello di inoltrare 
 	\item Instradamento (routing): Il livello di rete deve determinare il percorso che i pacchetti devono seguire all'interno della rete, determinati per mezzo degli algoritmi di instradamento. La funzione di instradamento è implementata nel piano di controllo. L'instradamento è solitamente implementato in software.
 \end{itemize}
 
-I router estraggono i campi di intestazione dai datagrammi, che usano come indice nella tabella di inoltro. Il valore trovato indica a quale interfaccia di uscita il segmento debba essere diretto.
+I router estraggono i campi di intestazione dai datagrammi, che li usano come indice nella tabella di inoltro. Il valore trovato indica a quale interfaccia di uscita il segmento debba essere diretto.
 \begin{table}[h!]
 	\centering
 	\begin{tabular}{|c|c|}
@@ -1468,7 +1470,7 @@ Benché possiamo dare spazio alla fantasia con i servizi che un livello di rete 
 	\item Processore di instradamento: Nella versione non SDN (versione tradizionale) esegue i protocolli di instradamento, mentre nella versione SDN è responsabile della comunicazione con il controller remoto. In tutti i casi mantiene le tabelle di inoltro
 \end{itemize}
 
-Le porte effettuano le dovute operazioni a livello 1 e 2 per comunicare con l'altro capo del mezzo fisico.
+Le porte effettuano le dovute operazioni a livello 1 e 2 della pila TCP/IP per comunicare con l'altro capo del mezzo fisico.
 
 L'inoltro può essere:
 \begin{itemize}
@@ -1757,7 +1759,7 @@ Ricordiamo, dai paragrafi precedenti, che l'inoltro basato sulla destinazione è
 
 Il paradigma match-action non è relegato alla sola azione di inoltro dei pacchetti: consideriamolo in maniera più generale dove l'operazione di match può essere effettuata su più campi dell'intestazione di un pacchetto e non soltanto a un livello nello stack dei protocolli. Ad esempio si possono controllare le intestazioni sia di IP che di TCP. L'operazione di Action è un'azione intrapresa a seguito di un match come inoltro, bilancio di carico, firewalling etc.
 
-Nell'inoltro generalizzato una tabella match-action generalizza la tabella di inoltro trattata precedentemente. I dispositivi di inoltro che fanno uso della tabella match-action sono denominati "packet switch" (facenti parte del piano dei dati). Le tabelle match-action sono calcolate e gestite da un controller remoto (facente parte del piano di controllo).
+Nell'inoltro generalizzato una tabella match-action (anche chiamata tabella dei flussi) generalizza la tabella di inoltro trattata precedentemente. I dispositivi di inoltro che fanno uso della tabella match-action sono denominati "packet switch" (facenti parte del piano dei dati). Le tabelle match-action sono calcolate e gestite da un controller remoto (facente parte del piano di controllo).
 
 Ogni riga in una tabella di inoltro match-action contiene (1) un insieme di valori dei campi dell'intestazione con i quali il pacchetto entrante verrà confrontato e (2) un insieme di azioni che devono essere intraprese quando un pacchetto viene associato a un'occorrenza.
 
@@ -1810,8 +1812,8 @@ Consideriamo sempre grafi non orientati. Dati due nodi qualsiasi, possono esiste
 
 Gli algoritmi di instradamento sono classificabili in due macrocategorie:
 \begin{itemize}
-	\item Algoritmi di instradamento centralizzati: Calcolano il percorso a costo minimo tra una sorgente e una destinazione avendo una conoscenza globale e completa della rete. Questi algoritmi vengono definiti Link-State (LS)
-	\item Algoritmi di instradamento decentralizzati: Il percorso a costo minimo viene calcolato in modo distribuito. Inizialmente i nodi conoscono solo i costi dei collegamenti a loro incidenti. Scambiandosi informazioni con i nodi adiacenti sono in grado di calcolare il percorso minimo. Solitamente tali algoritmi sono direttamente implementati nei router perché hanno poco senso in un contesto con un controller centralizzato.
+	\item Algoritmi di instradamento centralizzati: Calcolano il percorso a costo minimo tra una sorgente e una destinazione avendo una conoscenza globale e completa della rete. Questi algoritmi vengono definiti algoritmi Link-State (LS)
+	\item Algoritmi di instradamento decentralizzati: Il percorso a costo minimo viene calcolato in modo distribuito. Inizialmente i nodi conoscono solo i costi dei collegamenti a loro incidenti. Scambiandosi informazioni con i nodi adiacenti sono in grado di calcolare il percorso minimo. Questi algoritmi vengono definiti algoritmi Distance-Vector (DV). Solitamente tali algoritmi sono direttamente implementati nei router perché hanno poco senso in un contesto con un controller centralizzato.
 \end{itemize}
 
 Un secondo criterio per classificare gli algoritmi di instradamento riguarda il fatto di essere statici o dinamici. Quest'ultimi determinano gli instradamenti automaticamente al variare della topologia o dei costi della rete, cosa che non avviene per un algoritmo statico.
@@ -1831,18 +1833,40 @@ Affinché l'algoritmo sia corretto, i pesi devono essere non negativi.
 
 \subsubsection*{Funzionamento}
 
-Il sottoscritto consiglia di cercare in rete il funzionamento dell'algoritmo di Dijkstra: molto più semplice capirlo graficamente. Anche sul quaderno sono presenti degli esempi.
+Il sottoscritto consiglia di cercare in rete il funzionamento dell'algoritmo di Dijkstra: molto più semplice capirlo graficamente. Anche sul quaderno sono presenti degli esempi (sebbene non siano esaustivi di tutti i casi possibili, specialmente quando il grafo è sparso).
 
 L'algoritmo ha due fasi:
 
 \begin{itemize}
 	\item Fase di inizializzazione: Si imposta la distanza tra $A$ ("nodo sorgente") e tutti gli altri nodi a $+\infty$. Si imposta la distanza tra $A$ ed $A$ a zero, si imposta $A$ come esplorato e si passa alla fase iterativa.
-	\item Fase iterativa: In questo momento ci troviamo in un nodo esplorato $u$. Controlliamo tutti gli adiacenti di $u$ chiamati $adj(u)$: Per ogni $adj(u)$ chiamato $v$ si controlla la distanza tra quest'ultimo ed il nodo sorgente. Se il peso di questo percorso risultasse minore di un peso già memorizzato tra $A$ e $v$, si aggiorna il nuovo peso e si imposta il precedente di $v$ a $u$. Adesso ci si sposta in uno degli $adj(u)$ non esplorati che ha distanza minima da $A$, lo si imposta come esplorato e si ripete la fase iterativa. Ogni volta che si imposta un nodo come esplorato, la distanza tra quest'ultimo e $A$ risulta definitivamente nota. Più formalmente, a ogni $k$-esima iterazione, i percorsi a costo minimo sono noti per $k$ destinazioni. 
+	\item Fase iterativa: In questo momento ci troviamo in un nodo esplorato $u$. Controlliamo tutti gli adiacenti di $u$ chiamati $adj(u)$: Per ogni $adj(u)$ chiamato $v$ si controlla la distanza tra quest'ultimo ed il nodo sorgente. Se il peso di questo percorso risultasse minore di un peso già memorizzato tra $A$ e $v$, si aggiorna il nuovo peso e si imposta il precedente di $v$ a $u$. Dopodiché ci si sposta in uno degli $adj(u)$ non esplorati che ha distanza minima da $A$, lo si imposta come esplorato e si ripete la fase iterativa. Quando il nodo $x$ non ha più adiacenti da esplorare si torna al nodo che ha "chiamato" $x$ cosicché possa esplorare il 2° nodo che ha distanza minima da $A$.
+	Ogni volta che si imposta un nodo come esplorato, la distanza tra quest'ultimo e $A$ risulta definitivamente nota. Più formalmente, a ogni $k$-esima iterazione, i percorsi a costo minimo sono noti per $k$ destinazioni. 
 \end{itemize}
 
 Nota: In questa descrizione abbiamo impostato come "esplorato" un nodo prima di averne analizzato gli adiacenti. Nel libro di testo invece imposta come esplorato un nodo dopo averne visitato gli adiacenti. Non cambierebbe nulla.
 
 Il costo di questo algoritmo è $O(n^2)$ ma se si una un heap il tempo è $O(log(n))$
+\subsubsection*{Esempio banale}
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[
+		node/.style={circle,draw,minimum size=8mm},
+		edge/.style={-Latex,thick}
+		]
+		\node[node] (A) {A};
+		\node[node, right=2.5cm of A] (B) {B};
+		\node[node, below=1.2cm of B] (C) {C};
+		\node[node, left=2.5cm of A] (D) {D};
+		
+		\draw[edge] (A) -- node[above] {1} (B);
+		\draw[edge] (A) -- node[below left] {5} (C);
+		\draw[edge] (A) -- node[above] {10} (D);
+	\end{tikzpicture}
+	\caption{Dopo $A$ vado in $B$. Dopodiché non essendoci altri adiacenti analizzabili torno in $A$ (come se fosse uno stack) e vado al 2° nodo che ha distanza minima da $A$, ovvero $C$}
+	\label{fig:grafo-dijkstra}
+\end{figure}
+
+
 
 \subsection*{5.2.2 Instradamento Distance Vector (DV) / Algoritmo Bellman-Ford}
 Se l'instradamento LS usa informazioni globali, quello DV usa solo informazioni locali. DV è distribuito, asincrono e auto-terminante.
@@ -1865,7 +1889,7 @@ Prima di presentare l'algoritmo è bene dapprima presentare la legge di Bellman-
 $$\delta(x,y) = MIN(\forall v \in adj(x), w(x,v) + \delta(v,y))$$
 
 \subsubsection*{Spiegazione della legge}
-La formula sta a indicare che il costo minimo da $x$ a $y$ è $w(x,v) + \delta(v,y)$ calcolato su tutti i nodi $v$ adiacenti a $x$. Si noti come questa sia una formula ricorsiva in quando $\delta(v,y)$ sarà calcolata allo stesso modo.
+La formula sta a indicare che il costo minimo da $x$ a $y$ è il minimo $(w(x,v) + \delta(v,y))$ calcolato su tutti i nodi $v$ adiacenti a $x$. Si noti come questa sia una formula ricorsiva in quando $\delta(v,y)$ sarà calcolata allo stesso modo.
 \\
 \\
 La formula di Bellman-Ford fornisce le righe della tabella di inoltro del nodo che la esegue.
@@ -1905,7 +1929,9 @@ L'algoritmo funziona in questo modo: nella fase di inizializzazione aggiunge al 
 In alcune situazioni questo algoritmo può portare a instradamenti ciclici.
 
 \subsubsection*{Confronto tra gli istradamenti LS e DV}
-Nel DV ciascun nodo dialoga solo con i vicini direttamente connessi, informandoli delle stime da sè stesso a tutti gli altri nodi, mentre in LS ciascun nodo dialoga con tutti gli altri nodi della rete, ma comunica loro solo i costi dei collegamenti ad esso direttamente connessi.
+Nel DV ciascun nodo dialoga solo con i vicini direttamente connessi, informandoli delle stime da sè stesso a tutti gli altri nodi.
+
+In LS ciascun nodo dialoga con tutti gli altri nodi della rete (nella fase di discovery della topologia della rete), ma comunica loro solo i costi dei collegamenti ad esso direttamente connessi.
 
 Nessuno dei due è Pareto-superior all'altro.
 
@@ -1927,7 +1953,6 @@ In nessun caso è possibile usare direttamente gli algoritmi di Dijkstra e di Be
 \begin{itemize}
 	\item Come scopro i vicini?
 	\item Che metriche uso?
-	\item Come evito loop?
 	\item Come memorizzo le informazioni?
 	\item Che protocolli sottostanti uso per comunicare?
 	\item Ogni quanto invio informazioni?
@@ -1935,7 +1960,7 @@ In nessun caso è possibile usare direttamente gli algoritmi di Dijkstra e di Be
 	\item ...
 \end{itemize}
 
-per questo motivo esistono algoritmi quali OSPF, ISIS, RIP e EIGRP che risolvono questi problemi nella pratica, usando internamente talvolta l'algoritmo LS talvolta DV. Questi algoritmi sono intra-AS, ovverosia funzionano solo all'interno di un sistema autonomo
+per questo motivo esistono algoritmi quali OSPF, ISIS, RIP e EIGRP che risolvono questi problemi nella pratica, usando internamente talvolta l'algoritmo LS talvolta DV. Questi algoritmi sono intra-AS, ovverosia funzionano solo all'interno di un sistema autonomo.
 
 Sofferiamoci su OSPF: è un algoritmo di tipo Link-State che utilizza la tecnica del flooding (inondamento di informazioni) affinché tutti i router dell'AS abbiano una mappa della rete aggiornata e completa in modo che l'algoritmo di Dijkstra possa operare efficacemente.
 
@@ -1950,7 +1975,7 @@ BGP determina le tabelle di inoltro esterne all'AS. BGP non instrada però verso
 BGP
 \begin{itemize}
 	\item Consente a ciascuna sottorete di comunicare la propria esistenza al resto di Internet
-	\item Determinare il percorso migliore verso una sottorete
+	\item Determina il percorso migliore verso una sottorete
 \end{itemize}
 
 \subsection*{5.4.2 Distribuzione delle informazioni dei cammini in BGP}
@@ -1975,7 +2000,7 @@ I messaggi BGP scambiati tra due router gateway di due AS diversi prendono il no
 Quando un router annuncia un prefisso CIDR, aggiunge anche degli attributi BGP:
 \begin{itemize}
 	\item AS-PATH: Elenca i sistemi autonomi attraverso i quali è passato l'annuncio del prefisso. I router utilizzano tale attributo per evitare annunci ripetuti (se già vedono il loro identificativo al suo interno non lo inoltrano)
-	\item NEXT-HOP: Quando un router di bordo di un AS (\textit{x}) riceve un messaggio eBGP da un router di bordo (\textit{y}) di un altro AS  che gli indica l'esistenza di una sottorete, memorizza l'indirizzo IP di \textit{y} come attributo NEXT-HOP che gli permette di sapere a chi inoltrare i pacchetti per raggiungere quel prefisso annunciato. Per un solo prefisso possono esserci più NEXT-HOP. Il router NEXT-HOP viene annunciato dal router di bordo a tutti i router interni
+	\item NEXT-HOP: Quando un router di bordo di un AS (\textit{x}) riceve un messaggio eBGP da un router di bordo (\textit{y}) di un altro AS  che gli indica l'esistenza di una sottorete, memorizza l'indirizzo IP di \textit{y} come attributo NEXT-HOP che gli permette di sapere a chi inoltrare i pacchetti per raggiungere quel prefisso annunciato. Per un solo prefisso possono esserci più NEXT-HOP. L'indirizzo NEXT-HOP viene poi comunicato a tutti i router interni.
 \end{itemize}
 
 \subsubsection*{Instradamento Hot Potato}
