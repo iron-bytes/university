@@ -1550,7 +1550,7 @@ Quando queste code crescono, la memoria dei router può esaurirsi e quindi può 
 Sia $R_{switch}$ il tasso al quale i pacchetti vengono trasferiti dalla porta di input a quella di output e che i pacchetti arrivino alle porte di input ed escano dalle porte di output a un tasso di $R_{line}$ e che ci siano $N$ porte da ciascun lato. Se $R_{switch} \geq N \times R_{line}$ i pacchetti verranno tutti smistati prima che ne arrivino altri. Infatti anche supponendo il caso peggiore in cui arrivino $N$ pacchetti simultaneamente alle $N$ porte di input e dovranno essere inoltrati alla medesima porta di output, avranno il tempo di essere smistati prima che ne sopraggiungano altri.
 
 \subsubsection*{Accodamento in uscita}
-Con una struttura di commutazione molto veloce, è possibile che si crei accodamento in uscita. Perché? Innanzitutto notiamo, continuando con l'esempio sopra riportato, che nel caso in cui $N$ pacchetti giungano alla porta di uscita, quest'ultima può trasmettere solo un pacchetto alla volta. Per cui $N-1$ pacchetti dovranno mettersi in coda sulla porta di uscita prima di essere trasmessi. Inoltre l'uscita può trasmettere solo a $R_{line}$ e quindi la coda tenderà a crescere indefinitamente.
+Con una struttura di commutazione molto veloce, è possibile che si crei accodamento in uscita. Perché? Perché l'uscita può trasmettere solo a $R_{line}$ che è più lenta di $R_{switch}$ e quindi la coda tenderà a crescere indefinitamente.
 
 D'altro canto se la struttura di commutazione non è sufficientemente veloce potrebbero non formarsi code alle porte di output. In questo caso ci saranno accodamenti alle porte di input.
 
@@ -1558,6 +1558,8 @@ D'altro canto se la struttura di commutazione non è sufficientemente veloce pot
 Se la struttura di commutazione è abbastanza veloce e l'arrivo di pacchetti è adeguatamente cadenzato (no "burst" [cap. 1]), non si formeranno code nella singola porta di input, tranne nel seguente caso: È possibile che un pacchetto debba mettersi in attesa lo stesso perché sta aspettando il trasferimento di un pacchetto da un'altra porta di input verso la propria porta di output.
 
 Facciamo un esempio: due pacchetti su due porte di ingresso diverse devono uscire sulla stessa porta di uscita. La porta di uscita non può riceverli entrambi contemporaneamente quindi uno dei pacchetti deve rimanere in attesa nella porta di input.
+
+Questo effettuo genera il cosiddetto "blocco in testa alla coda" che vedremo più avanti.
 \\\\
 Che cosa avviene invece avviene se la struttura di commutazione non è sufficientemente veloce?
 In questo caso sicuramente la coda aumenterebbe all'infinito
@@ -1565,12 +1567,7 @@ In questo caso sicuramente la coda aumenterebbe all'infinito
 \subsubsection*{Blocco in testa alla coda}
 Immaginiamo ci siano due porte di uscita: $O1$ e $O2$, una porta di ingresso, $I1$ al cui interno ci sono due pacchetti $P1$, indirizzato alla porta $O1$ e $P2$ indirizzato alla porta $O2$. $P1$ è schedulato per uscire dalla coda prima di $P2$.
 
-Ebbene, se $P1$ è bloccato nella coda di input perché in quel momento $O1$ è incapacitato a riceverlo in quanto
-\begin{itemize}
-	\item Davanti a $P1$ c'è un ulteriore pacchetto verso $O1$ oppure
-	\item Un altra porta di input sta inviando a $O1$ un altro pacchetto (infatti $O1$ non può ricevere nello stesso istante più pacchetti)
-\end{itemize}
-allora anche $P2$ è bloccato, anche se magari $O2$ è libera. Questo fenomeno è noto come "Blocco in testa alla coda", ovvero quando un pacchetto in ingresso deve comunque aspettare anche se la sua destinazione è libera.
+Ebbene, se $P1$ è bloccato nella coda di input perché in quel momento $O1$ è incapacitato a riceverlo in quanto un' altra porta di input sta inviando a $O1$ un altro pacchetto (infatti $O1$ non può ricevere nello stesso istante più pacchetti) allora anche $P2$ è bloccato, anche se magari $O2$ è libera. Questo fenomeno è noto come "Blocco in testa alla coda", ovvero quando un pacchetto in ingresso deve comunque aspettare anche se la sua destinazione è libera.
 
 \subsection*{4.2.5 Schedulazione di pacchetti}
 Bisogna determinare in che ordine i pacchetti vengono trasmessi dalla porta di uscita verso l'esterno.

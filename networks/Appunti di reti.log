@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.10.18)  1 FEB 2026 22:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.10.18)  2 FEB 2026 00:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -851,64 +851,67 @@ Package pdftex.def Info: images/CommutazioneReteDiInterconnessione.png  used on
  input line 1537.
 (pdftex.def)             Requested size: 135.89174pt x 88.6146pt.
  [51 <./images/CommutazioneTramiteBus.png (PNG copy)>]
-Underfull \hbox (badness 10000) in paragraph at lines 1564--1568
+Underfull \hbox (badness 10000) in paragraph at lines 1562--1566
 
  []
 
 [52 <./images/CommutazioneReteDiInterconnessione.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1591--1595
+Underfull \hbox (badness 10000) in paragraph at lines 1584--1588
 
  []
 
-[53] [54]
-Underfull \hbox (badness 10000) in paragraph at lines 1649--1653
+[53]
+Underfull \hbox (badness 10000) in paragraph at lines 1642--1646
+
+ []
+
+[54]
+Underfull \hbox (badness 10000) in paragraph at lines 1653--1658
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1660--1665
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1660--1665
+Underfull \hbox (badness 10000) in paragraph at lines 1653--1658
 
  []
 
 [55]
-Overfull \hbox (25.00406pt too wide) in paragraph at lines 1699--1700
+Overfull \hbox (25.00406pt too wide) in paragraph at lines 1692--1693
 \OT1/cmr/m/n/10 Esistono in-nu-merevoli host (in-ter-facce) con lo stesso in-d-
 i-rizzo IP pri-vato, ma come viene gestito l'indirizzamento
  []
 
-[56]
-Overfull \hbox (1.86626pt too wide) in paragraph at lines 1719--1720
+
+Overfull \hbox (1.86626pt too wide) in paragraph at lines 1712--1713
 []\OT1/cmr/m/n/10 Intestazione ot-timizza: Al-cuni campi di IPv4 sono stati eli
 m-i-nati ren-dendo l'intestazione a lunghezza
  []
 
-[57]
-Overfull \hbox (16.94963pt too wide) in paragraph at lines 1755--1756
+[56]
+Overfull \hbox (16.94963pt too wide) in paragraph at lines 1748--1749
 []\OT1/cmr/m/n/10 Ogni riga in una tabella di in-oltro match-action con-tiene (
 1) un in-sieme di val-ori dei campi dell'intestazione
  []
 
-[58]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[57] [58]
 Capitolo 5.
 [59
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1870--1872
+Underfull \hbox (badness 10000) in paragraph at lines 1863--1865
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1870--1872
+Underfull \hbox (badness 10000) in paragraph at lines 1863--1865
 
  []
 
 [60]
-Underfull \hbox (badness 10000) in paragraph at lines 1883--1887
+Underfull \hbox (badness 10000) in paragraph at lines 1876--1880
 
  []
 
@@ -916,7 +919,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1883--1887
 <images/eBPG_and_iBGP.png, id=237, 1262.7175pt x 550.055pt>
 File: images/eBPG_and_iBGP.png Graphic file (type png)
 <use images/eBPG_and_iBGP.png>
-Package pdftex.def Info: images/eBPG_and_iBGP.png  used on input line 1983.
+Package pdftex.def Info: images/eBPG_and_iBGP.png  used on input line 1976.
 (pdftex.def)             Requested size: 452.9679pt x 197.31462pt.
  [63 <./images/eBPG_and_iBGP.png>] [64] [65] (./Appunti di reti.aux)
 
@@ -952,7 +955,7 @@ onts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
 ublic/amsfonts/cm/cmtt8.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1
 000.pfb>
-Output written on "Appunti di reti.pdf" (65 pages, 1997266 bytes).
+Output written on "Appunti di reti.pdf" (65 pages, 1996885 bytes).
 PDF statistics:
  326 PDF objects out of 1000 (max. 8388607)
  204 compressed objects within 3 object streams
