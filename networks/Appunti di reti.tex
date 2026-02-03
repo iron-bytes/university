@@ -2039,7 +2039,7 @@ Ma come fa il programma client a sapere quando fermarsi? Dato che il datagramma 
 \section*{5.8 Riepilogo}
 Abbiamo visto che esistono due approcci per la costruzione di un piano di controllo: il controllo tradizionale (nel quale ogni singolo router esegue un algoritmo di instradamento e comunica con gli altri) e il Software-Defined Networking nel quale un controller logicamente centralizzato calcola e gestisce le tabelle di inoltro che devono essere utilizzate dai router.
 
-\chapter*{Livello di collegamento e reti locali}
+\chapter{Livello di collegamento e reti locali}
 Se il livello di rete fornisce un servizio di comunicazione tra due nodi qualsiasi della rete, il livello di collegamento fornisce un servizio di comunicazione tra due nodi adiacenti.
 
 \section*{6.1 Livello di collegamento: introduzione}
@@ -2050,7 +2050,7 @@ Se il collegamento fisico è condiviso tra più di due nodi ci troviamo dinnanzi
 \subsection*{6.1.1 Servizi offerti dal livello di collegamento}
 Sebbene il servizio base del livello di collegamento sia quello di trasportare datagrammi da un nodo a quello adiacente lungo un singolo canale di comunicazione, i possibili servizi che possono essere forniti dai protocolli a questo livello sono:
 \begin{itemize}
-	\item Accesso al collegamento: se ci si ritrova in presenza di un canale broadcast è necessario coordinare la trasmissione dei frame
+	\item Accesso al collegamento: se ci si ritrova in presenza di un canale broadcast è necessario coordinare la trasmissione dei frame (vedere sezione 6.3)
 	\item Rilevazione e correzione degli errori: È possibile rilevare e correggere errori nel frame grazie a bit di controllo inseriti nello stesso.
 	\item Consegna affidabile: Una conseguenza della rilevazione e correzione degli errori è la consegna affidabile
 \end{itemize}
@@ -2074,10 +2074,78 @@ Il mittente include un bit addizionale e sceglie il suo valore in modo da render
 \\\\
 Esempio:
 
-\centering
+\begin{Center}
 $\underbrace{\mathtt{11011001}}_{D}\;|\underbrace{\mathtt{1}}_{\text{bit di parità}}$
+\end{Center}
 
-\\\\
+Ciò che il ricevente deve fare è semplicemente contare il numero di bit \texttt{1} tra quelli ricevuti. Se ne nota un numero dispari allora sa che si è verificato un errore. Questo meccanismo è però molto fragile, infatti se si verifica un numero pari di alterazioni sui bit ci sarà un errore non rilevato. Inoltre può rilevare ma non correggere l'errore.
+
+Vediamo ora un controllo di parià bidimensionale dove i $d$ bit vengono suddivisi in $i$ righe e $j$ colonne. Per ogni riga e per ogni colonna ci sarà un bit di parità, più un ulteriore bit per rilevare errori sugli stessi bit di parità.
+
+Supponiamo ora che si verifichi un errore nei $d$ bit originali: la colonna e la riga dove si è verificato l'errore saranno ora noti e incrociando i dati sarà possibile individuare l'esatto bit corrotto, potendo quindi correggerlo.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{images/bdimensional_parity_check.png}
+	\label{fig:esempio}
+\end{figure}
+
+Anche gli errori sugli stessi bit di parità possono essere individuati e corretti.
+
+\subsection*{6.2.2 Checksum}
+Il checksum si basa su questo approccio: i dati sono trattati come interi a 16 bit e sommati. Il complemento a 1 di questa somma costituisce il checksum che viene immesso nell'intestazione.
+Il ricevente fa la somma tra i dati ricevuti e il checksum e controlla che il risultato sia 1. Se ci sono degli 0 vuol dire che si è verificato un errore.
+(N.D.A. Il libro dice che fa il complemento di questo numero e verifica che il risultato siano tutti 0, ma è un passaggio in più inutile secondo me).
+
+Questo approccio viene però spesso fatto dagli algoritmi di livello di trasporto, mentre il livello di collegamento tende a usare CRC. Perché? Perché il livello di trasporto è implementato in software e quindi ha bisogno di algoritmi semplici e veloci, mentre il livello di collegamento permette di effettuare un controllo sugli errori direttamente nella circuitistica hardware che possono effettuare più rapidamente le complesse operazioni di CRC.
+
+\subsection*{6.2.3 Controllo a ridondanza ciclica (CRC)}
+\textbf{CAPIRE MEGLIO} --- DA SCRIVERE!!
+
+\section*{6.3 Collegamenti broadcast e protocolli di accesso multiplo}
+Il collegamento punto a punto è costituito da un trasmittente posto a un capo del collegamento e da un unico ricevente all'altra.s
+
+Il collegamento broadcast, invece, può avere più trasmittenti e riceventi e si contendono il collegamento condiviso. Quando un nodo diffonde un frame, tutti gli altri nodi ne ricevono una copia.
+
+Esamineremo ora un problema fondamentale: come coordinare  l'accesso di più nodi trasmittenti e riceventi in un canale broadcast condiviso, ossia analizzeremo il problema dell'accesso multiplo che consiste nel determinare chi e quando debba trasmettere. Il problema viene risolto per mezzo di algoritmi ad accesso multiplo.
+
+Dato che tutti i nodi sono in grado di trasmettere frame, è possibile che due o più lo facciano allo stesso momento, generando una collisione a causa della quale nessuno dei nodi riceventi riuscirà a interpretare i frame. La conseguenza di ciò è anche uno spreco di banda.
+
+Possiamo classificare i protocolli di accesso multiplo in una di queste categorie:
+\begin{itemize}
+	\item Protocolli a suddivisione del canale
+	\item Protocolli ad accesso casuale
+	\item Protocolli a rotazione
+\end{itemize}
+
+Un protocollo di accesso multiplo per un canale broadcast con banda $R$ bit al secondo dovrebbe idealmente avere le seguenti caratteristiche:
+\begin{enumerate}
+	\item Quando un solo nodo deve inviare i dati, questo dispone di un throughput pari a $R$ bit al secondo
+	\item Quando $M$ nodi devono inviare dati, questi dispongono di un throughput pari a $R/M$ bit al secondo
+	\item Il protocollo è decentralizzato, in modo che un fallimento di un nodo "master" non causi conseguenze
+	\item Il protocollo è semplice in modo che risulti veloce ed economico
+\end{enumerate}
+
+\subsection*{6.3.1 Protocolli a suddivisione del canale}
+Il multiplexing a divisione di tempo (TDM) e quello a suddivisione di frequenze (FDM) possono essere utilizzati allo scopo.
+
+Nel TDM si assegna ogni slot di tempo a uno degli $N$ nodi in modo tale che ogni nodo abbia un tasso trasmissivo di $R/N$ bit/s.
+Il problema di TDM è che anche quando non vi sono altri nodi che devono inviare un pacchetto, quello che vuole trasmettere è vincolato ad attendere il suo turno e quindi trasmetterà a un tasso di $R/N$ sebbene $R$ sia completamente disponibile.
+
+In FDM si suddivide la banda in $N$ frequenze. Anche in questo caso, come in TDM, se non ci sono altri nodi che inviano pacchetti, quello che vuole trasmettere è vincolato a un tasso trasmissivo di $R/N$ bit/s.
+
+Vi è un terzo protocollo a suddivisione del canale denominato accesso multiplo a divisione di codice (CDMA).
+CDMA assegna a ogni nodo un codice univoco che inseriscono nei dati inviati. I riceventi, dunque, non devono far altro che leggere solo i segmenti con uno specifico codice.
+
+
+
+
+
+
+
+
+
+
 
 
 
