@@ -2135,6 +2135,38 @@ In FDM si suddivide la banda in $N$ frequenze. Anche in questo caso, come in TDM
 Vi è un terzo protocollo a suddivisione del canale denominato accesso multiplo a divisione di codice (CDMA).
 CDMA assegna a ogni nodo un codice univoco che inseriscono nei dati inviati. I riceventi, dunque, non devono far altro che leggere solo i segmenti con uno specifico codice.
 
+\subsection*{6.3.2 Protocolli ad accesso casuale}
+Qui un nodo trasmette alla massima velocità possibile ma quando si verifica una collisione i nodi riprovano (dopo un certo lasso di tempo casuale non concordato con gli altri nodi) a ritrasmettere ripetutamente i loro frame fin quando non giungono correttamente a destinazione.
+
+Alcuni dei protocolli ad accesso casuale sono ALOHA, CSMA e Ethernet.
+
+\subsubsection*{Slotted ALOHA}
+Assumiamo che:
+\begin{itemize}
+	\item Tutti i frame consistono esattamente di $L$ bit
+	\item Il tempo sia suddiviso in slot di $L/R$ secondi (ovverosia esattamente il tempo per trasferire un frame)
+	\item I nodi cominciano la trasmissione dei frame solo all'inizio degli slot
+	\item I nodi siano sincronizzati in modo che tutti sappiano quando iniziano gli slot
+	\item Qualora in uno slot due o più frame collidano, tutti i nodi della rete rilevano l'evento prima del termine dello slot
+\end{itemize}
+
+Per collisione intendiamo che uno slot temporale è utilizzato contemporaneamente da almeno due nodi trasmittenti.
+
+Le operazioni dei nodi Slotted ALOHA sono:
+\begin{itemize}
+	\item Quando un nodo ha un nuovo frame da spedire, attende l'inizio dello slot successivo per trasmetterlo
+	\item Se non si verifica una collisione, l'operazione ha avuto successo
+	\item Se si verifica una collisione, il nodo la rileva prima del termine dello slot e ritrasmette con probabilità $p$ il suo frame durante gli slot successivi, fin quando l'operazione non ha avuto successo
+\end{itemize}
+
+Slotted ALOHA consente a un nodo, qualora fosse il solo nodo attivo della rete, di trasmettere alla massima velocità del canale. Inoltre questo protocollo è anche fortemente decentralizzato anche se è comunque necessario che gli slot siano sincronizzati tra tutti i nodi.
+
+Quando invece ci sono molti nodi attivi, una certa frazione degli slot presenterà collisioni mentre un'altra frazione di essi risulterà vuota a causa della probabilità $(1-p)$ che ogni nodo ha di non trasmettere in quello slot se si è verificata una collisione.
+
+I soli slot non sprecati saranno quelli utilizzati da esattamente un solo nodo per trasmettere. Lo slot in cui si trasmette viene chiamato slot riuscito.
+
+
+
 
 
 
