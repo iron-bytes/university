@@ -244,9 +244,7 @@ I programmi che fanno uso dei protocolli a livello applicazione sono eseguiti su
 
 Un'applicazione di rete è un servizio che utilizza la rete per permettere la comunicazione o lo scambio di dati tra host diversi. È formata da uno o più programmi applicativi (es. browser, client e-mail) che comunicano tra loro tramite protocolli di livello applicazione (es. HTTP, SMTP, IMAP).
 
-Esempi: Web, posta elettronica (e-mail), messaggistica, streaming.
-
-La loro implementazione è detta programma. Un programma in esecuzione è un processo.
+Web, posta elettronica (e-mail), messaggistica, streaming sono applicazioni di rete.
 
 \subsection*{2.1.1 Architettura delle applicazioni di rete}
 L'architettura di rete fornisce alle applicazioni uno specifico insieme di servizi. Il compito dello sviluppatore è scegliere tra utilizzare l'architettura client-server o l'architettura Peer to Peer.
@@ -555,7 +553,7 @@ Uno user agent che usa POP3 può essere configurato dall'utente per "scaricare e
 \subsubsection*{IMAP}
 Con l'accesso tramite POP3, dopo aver scaricato i messaggi sulla macchina locale, l'utente può creare cartelle nelle quali inserire i messaggi. Questo paradigma pone però problemi per gli utenti mobili in quanto la struttura delle directory non si muove insieme a loro. Serve allora un modo per mantenere la gerarchia delle cartelle sul server alla quale si può accedere da diversi calcolatori.
 
-Per risolvere questo e altri problemi viene in soccorso il protocollo IMAP. Un server che adotta il protocollo IMAP associa ogni messaggio arrivato al server in una cartella. L'utente può crearne di altre e spostare i messaggi al loro interno. IMAP fornisce anche comani per consentire agli utenti di effettuare ricerche in cartelle remote. Un'altra caratteristica è che consente di scaricare solo singole parti dei messaggi.
+Per risolvere questo e altri problemi viene in soccorso il protocollo IMAP. Un server che adotta il protocollo IMAP associa ogni messaggio arrivato al server in una cartella. L'utente può crearne di altre e spostare i messaggi al loro interno. IMAP fornisce anche comandi per consentire agli utenti di effettuare ricerche in cartelle remote. Un'altra caratteristica è che consente di scaricare solo singole parti dei messaggi.
 
 \subsubsection*{Posta basata sul Web}
 Al giorno d'oggi gli utenti possono inviare e leggere posta su un browser Web. In questo caso lo user agent è un browser web e l'utente comunica con il proprio server web via HTTP.
@@ -563,7 +561,7 @@ Al giorno d'oggi gli utenti possono inviare e leggere posta su un browser Web. I
 In ogni caso, anche se gli utenti finali comunicano con i loro server via HTTP, i server tra di loro comunicano via SMTP.
 
 \section*{2.4 DNS: il servizio di directory di Internet}
-Gli host di internet possono essere identificati possono essere indentificati in due modi: tramite il nome host (es. www.eff.org), che sono facili da ricordare per le persone ma non adatti per un sistema di routing e tramite indirizzo IP, difficili da ricordare ma adatto per il sistema di routing in quanto otteniamo informazioni più dettagliate all'interno del collocamento della macchina nella rete ad esso associato.
+Gli host di internet possono essere indentificati in due modi: tramite il nome host (es. www.eff.org), che sono facili da ricordare per le persone ma non adatti per un sistema di routing e tramite indirizzo IP, difficili da ricordare ma adatto per il sistema di routing in quanto otteniamo informazioni più dettagliate all'interno del collocamento della macchina nella rete ad esso associato.
 
 Ogni indirizzo IP è formato da 4 byte con un punto che divide ogni byte espresso in decimale da 0 a 255 (es. 192.168.10.255). Gli indirizzi IP sono gerarchici perché leggendoli da sinistra verso destra otteniamo informazioni sempre più specifiche sulla collocazione dell'host all'interno di Internet.
 
