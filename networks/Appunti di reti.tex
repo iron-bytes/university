@@ -2159,20 +2159,211 @@ Le operazioni dei nodi Slotted ALOHA sono:
 	\item Se si verifica una collisione, il nodo la rileva prima del termine dello slot e ritrasmette con probabilità $p$ il suo frame durante gli slot successivi, fin quando l'operazione non ha avuto successo
 \end{itemize}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/slotted_aloha.png}
+	\caption{Slotted ALOHA}
+\end{figure}
+
 Slotted ALOHA consente a un nodo, qualora fosse il solo nodo attivo della rete, di trasmettere alla massima velocità del canale. Inoltre questo protocollo è anche fortemente decentralizzato anche se è comunque necessario che gli slot siano sincronizzati tra tutti i nodi.
 
 Quando invece ci sono molti nodi attivi, una certa frazione degli slot presenterà collisioni mentre un'altra frazione di essi risulterà vuota a causa della probabilità $(1-p)$ che ogni nodo ha di non trasmettere in quello slot se si è verificata una collisione.
 
 I soli slot non sprecati saranno quelli utilizzati da esattamente un solo nodo per trasmettere. Lo slot in cui si trasmette viene chiamato slot riuscito.
 
+Calcoliamo ora l'efficienza di questo protocollo. Supponiamo che un nodo abbia sempre un frame da spedire e, per semplicità, trasmetta con probabilità $p$ sia un frame che ha colliso sia un nuovo frame. Ipotizziamo di avere $N$ nodi.
+
+La probabilità che un dato slot sia vincente è data dalla probabilità che un solo nodo trasmetta mentre i restanti $N-1$ nodi rimangano inattivi. La probabilità che un solo nodo trasmetta è $p$ mentre la probabilità che $N-1$ nodi non trasmettano è $(1-p)^{N-1}$. Quindi la probabilità di successo di un dato nodo è $p(1-p)^{N-1}$.
+Poiché ci sono $N$ nodi, la probabilità che un nodo arbitrario abbia successo è $Np(1-p)^{N-1}$.
+
+Il valore $p*$ che sostituito a $p$ massimissi l'espressione è $0,37$. Pertanto, dato che abbiamo il valore $p$ che massimizza l'espressione, impostiamo $0,37$ essere tale probabilità. Ciò però implica che i nodi trasmetteranno informazione utile solo il $37\%$ delle volte e di conseguenza la banda effettivamente utilizzata sarà del $37\%$
+
+\subsubsection*{ALOHA}
+Slotted ALOHA richiede che tutti i nodi sincronizzino le loro trasmissioni mentre ALOHA è completamete decentralizzato.
+
+Supponiamo che tutti i frame abbiano stessa dimensione e supponiamo che la trasmissione di un frame inizi a $t_0$. Ciò implica che nessun altro nodo può cominciare la trasmissione di un frame nell'intervallo $(t_0-1 , t_0]$ né può iniziare nell'intervallo $[t_0, t_0+1]$ altrimenti i due frame si sovrapporrebbero (vedi figura)
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/aloha_interference.png}
+\end{figure}
+
+ALOHA ha un'efficienza peggiore di Slotted ALOHA, ma è il prezzo per essere completamente decentralizzato.
+
+\subsubsection*{CSMA: Accesso multiplo con rilevamento della portante}
+Nei due protocolli ALOHA i nodi prendono la decisione di parlare indipendentemente dall'attività degli altri nodi.
+
+CSMA invece si basa sul seguente principio: Ascoltare prima di parlare. Un nodo ascolta il canale prima di trasmettere. Se un canale sta già trasmettendo un frame, il nodo aspetta. Questa caratteristica si chiama rilevamento della portante.
+
+Nonostante ciò possono comunque verificarsi collisioni. Perché? Per capirlo si guardi il seguente grafico dove l'asse delle $x$ rappresenta lo spazio e le lettere suindicate rappresentano dei nodi. A titolo di esempio, la distanza tra $A$ e $C$ è maggiore della distanza tra $A$ e $B$. L'asse delle $y$ rappresenta il tempo. 
 
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{images/CSMA_space_time_diagram.png}
+	\caption{Diagramma spazio-temporale di CSMA con collisioni}
+\end{figure}
+
+Sia il nodo B che il nodo D vogliono mandare un segmento. B lo fa a tempo $t_0$ ma poiché il tempo di propagazione del segmento da B a D è non nullo, a tempo $t_1$ il nodo D vede il canale libero (anche se non lo è) e immette nella rete i suoi segmenti, generando una collisione.
+
+Il ritardo di propagazione da un estremo all'altro della rete è cruciale: maggiore sarà questo ritardo maggiori saranno le possibilità di collisione.
+
+\subsubsection*{CSMA/CD: Accesso multiplo con rilevazione della portante e delle collisioni}
+CSMA/CD estende CSMA in questo modo: Il nodo che trasmette rimane in ascolto del canale. Se osserva che un altro nodo sta trasmettendo un frame che interferisce col suo, cessa immediatamente la propria trasmissione.
+
+La differenza con CSMA è che quest'ultimo non rimane in ascolto mentre invia il frame.
+
+Grazie a CSMA/CD la durata della collisione diminuisce
+
+\subsection*{6.3.3 Protocolli a rotazione}
+Esistono diversi protocolli a rotazione ma qui ne citiamo due:
+
+\subsubsection*{Protocollo polling}
+Uno dei nodi, designato come principale, interpella a turno gli altri. Il nodo principale invia un messaggio al nodo 1 indicandogli che può trasmettere per un determinato periodo di tempo, dopodiché passa al nodo 2 e così via. Se un nodo non deve comunicare o la sua trasmissione dura meno della finestra temporale a lui assegnata, il nodo principale passa immediatamente al successivo.
+
+Il protocollo polling elimina le collisioni e gli slot vuoti ma introduce degli svantaggi: il primo è l'introduzione del ritardo di polling, il secondo è che se il nodo principale si guasta, la rete collassa.
+
+\subsubsection*{Protocollo token-passing}
+Qui non esiste un nodo principale ma c'è un messaggio di controllo, detto token, che passa da un nodo all'altro in ordine prefissato. Solo chi ha il token è autorizzato a comunicare. Questo protocollo è completamente decentralizzato ma se un nodo si guasta o se non riesce a inoltrare il token la rete collassa.
+
+\section*{6.4 Reti locali commutate}
+Gli switch operano a livello di collegamento e commutano frame. Non riconoscono gli indirizzi a livello di rete. Affinché sia possibile commutare frame, si utilizzano indirizzi a livello di collegamento.
+
+\subsection*{6.4.1 Indirizzi a livello di collegamento e ARP}
+Host e router hanno indirizzi a livello di collegamento, detti indirizzi MAC. Inoltre analizzeremo il protocollo ARP che fornisce ai nodi un meccanismo per trasformare indirizzi IP in indirizzi MAC
+
+\subsubsection*{Indirizzi MAC}
+Gli indirizzi MAC sono composti da 6 byte, solitamente scritti in modo esadecimale. Esempio: \texttt{49-BD-D2-C7-56-2A}. Gli indirizzi MAC sono "piatti" ovvero non hanno una struttura gerarchica.
+
+Così come gli indirizzi IP, non sono i nodi in sè ad avere un indirizzo MAC, bensì sono le loro interfacce di rete a possederli. Non esistono al mondo due NIC con lo stesso indirizzo MAC. È la IEEE che assegna a ogni casa madre un blocco. 
+
+È importante sottolineare che gli switch NON hanno indirizzi di collegamento associati alle loro interfacce in quanto il loro compito è trasportare frame in modo trasparente. Questo significa che i nodi non devono esplicitamente inserire l'indirizzo MAC dello switch che interviene.
+
+Quando una scheda di rete vuole inviare un frame, inserisce in quest'ultimo l'indirizzo MAC del destinatario e lo immette nella rete. Uno switch può occasionalmente fare broadcast di un frame in ingresso su tutte le sue interfacce di uscita, pertanto una scheda di rete può ricevere un frame non indirizzato a lei. In tal caso la scheda di rete scarterà il frame.
+
+Se viene inserito l'indirizzo di broadcast \texttt{FF-FF-FF-FF-FF-FF}, tutte le schede di rete nella sottorete otterranno il frame.
+
+\subsubsection*{Protocollo per la risoluzione degli indirizzi: ARP}
+Dato che esistono sia indirizzi del livello di rete sia indirizzi a livello di collegamento, si ha la necessità di tradurre l'indirizzo IP in indirizzo MAC.
+
+Ogni nodo ha un modulo ARP che riceve in input un indirizzo IP e restituisce un indirizzo MAC. ARP risolve soltanto gli indirizzi IP per i nodi della stessa sottorete. È in grado di fare ciò per mezzo di una tabella ARP che contiene la corrispondenza degli indirizzi più un valore relativo al TTL che indica quando bisogna eliminare una voce dalla tabella.
 
 
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{Indirizzo IP} & \textbf{Indirizzo MAC} & \textbf{TTL}\\
+		\hline
+		10.0.0.2 & A2:A3:42:B5:58:84 & 12:48 \\
+		10.0.0.3 & 7A:0F:44:27:5D:5A & 13:53 \\
+		\hline
+	\end{tabular}
+	\caption*{Esempio di tabella ARP in un modulo ARP}
+\end{table}
 
+La tabella non contiene necessariamente una voce per ogni nodo. Ma allora che cosa succede quando arriva un indirizzo IP di cui non si conosce l'indirizzo MAC? In questo caso il nodo costruisce un pacchetto ARP, contenente l'indirizzo IP da risolvere e lo invia all'indirizzo broadcast \texttt{FF-FF-FF-FF-FF-FF}. Il suo scopo è interrogare tutti gli altri nodi della sottorete riguardo l'indirizzo MAC corrispondente all'indirizzo IP da risolvere.
 
+Il frame contenente la richiesta ARP è ricevuto da tutte le schede di rete della sottorete che controllano se il proprio indirizzo IP coincide con quello richiesto. In caso affermativo viene inviata una risposta ARP con l'indirizzo MAC associato. Questo frame non viene inviato in un frame broadcast.
 
+ARP è un protocollo a livello di collegamento o a livello di rete? Un pacchetto ARP è incapsulato in un frame a livello di collegamento, quindi giacerebbe sopra di esso. D'altro canto contiene anche indirizzi a livello di collegamento, pertanto apparterrebbe ad esso. Contiene inoltre indirizzi a livello di rete e quindi, in teoria, apparterrebbe anche a quest'ultimo. Alla fine possiamo considerare ARP essere un protocollo al confine tra il livello di rete e quello di collegamento.
 
+\subsubsection*{Come inviare un datagramma a un nodo esterno alla sottorete}
+Ipotizziamo che un datagramma dalla sottorete A deve viaggiare verso la sottorete B. Ipotizziamo che tra A e B ci sia esattamente un router. Quest'ultimo presenta due interfacce: una esposta verso A e una verso B.
+
+Al datagramma viene assegnato l'indirizzo IP di destinazione dell'host nella rete B, ma quando viene incapsulato in un frame, quest'ultimo non avrà l'indirizzo MAC dell'host di destinazione, bensì avrà l'indirizzo MAC della porta del router rivolta verso A.
+
+Il router, quando invia il frame dalla propria interfaccia rivolta verso B, inserirà l'indirizzo MAC dell'host di destinazione.
+
+\subsection*{6.4.2 Ethernet}
+Negli anni '70 Ethernet usava un cavo coassiale con topologia a bus. Questa topologia era un canale broadcast.
+
+Alla fine degli anni '90 si era evoluta utilizzando un cavo di rame con una topologia a stella basata su hub. Un hub è un dispositivo di rete che quando riceve un bit da una delle sue interfacce, lo inoltra identico verso tutte le altre interfacce. Anche in questo caso siamo dinnanzi un canale broadcast.
+
+All'inizio degli anni 2000 lo switch prende il posto dell'hub. Uno switch è un commutatore di pacchetti di livello di collegamento e garantisce che non ci siano collisioni grazie all'impiego di buffer.
+
+\subsubsection*{Struttura dei frame Ethernet}
+Esaminiamo i campi di un frame Ethernet:
+\begin{itemize}
+	\item Campo dati (da 46 a 1500 byte): Contiene il datagramma IP. Dato che l'unità massima di trasmissione (MTU) è 1500 byte, se il datagramma IP supera questo valore allora deve essere frammentato. Se invece è inferiore a 46byte deve allora essere riempito fino a raggiungere questo valore
+	\item Indirizzo MAC destinazione
+	\item Indirizzo MAC sorgente
+	\item Tipo: Indica il protocollo superiore a cui deve essere consegnato il payload nel nodo destinatario. Questo perché IP non è l'unico protocollo superiore che esiste. Infatti troviamo ad esempio ARP.
+	\item CRC
+	\item Preambolo: I frame Ethernet iniziano con 7 byte tutti uguali che servono risvegliare le schede di rete e sincronizzare il loro clock mentre un altro byte, differente, indica che i dati veri e propri stanno per arrivare 
+\end{itemize}
+
+Ethernet fornisce un servizio non orientato alla connessione: i frame vengono immessi nella rete senza alcun handshake. Inoltre fornisce un servizio non affidabile, infatti, anche se il controllo CRC fallisce, non lo segnala al mittente; semplicemente lo scarta. Ciò aiuta a mantenere Ethernet semplice ed economico.
+
+Quando Ethernet era basato su bus o a centro-stella con hub, si trattava di un canale broadcast. Pertanto veniva impiegato il protocollo CSMA/CD. Oggi, dato che ci troviamo in contesti a centro-stella con switch, non ci sono collisioni e pertanto non vi è la necessità di operare un protocolli ad accesso multiplo.
+
+\subsection*{6.4.3 Switch}
+Il ruolo dello switch è quello di ricevere frame in ingresso e inoltrarli sui collegamenti in uscita. Lo switch è "trasparente" ai nodi in quanto questi ultimi si indirizzano frame l'un l'altro senza indirizzarli direttamente allo switch. In altre parole, dal punto di vista dei nodi, lo switch non esiste. Le interfacce degli switch hanno dei buffer
+
+\subsubsection*{Inoltro e filtraggio}
+Il filtraggio è la funzionalità dello switch che determina se un frame debba essere inoltrato a una qualche interfaccia o scartato. L'inoltro consiste nell'individuazione dell'interfaccia su cui il frame debba essere diretto e dell'invio su di essa.
+
+Le operazioni di inoltro e filtraggio su uno switch sono eseguite mediante una tabella di commutazione composta da una riga per ogni nodo, sebbene non sia necessario che tutti i nodi siano presenti nella tabella di commutazione. Le righe contengono: (1) Indirizzo MAC del nodo, (2) l'interfaccia dello switch che conduce al nodo, (3) il momento in cui quella voce è stata creata.
+
+Ipotizziamo che un frame con indirizzo di destinazione \texttt{AA-AA-AA-AA-AA-AA} giunga allo switch sull'interfaccia $x$. Lo switch cerca nella sua tabella di commutazione l'indirizzo MAC \texttt{AA-AA-AA-AA-AA-AA}. I possibili casi sono 3:
+\begin{enumerate}
+	\item Non vi è una voce per l'indirizzo \texttt{AA-AA-AA-AA-AA-AA}. In questo caso lo switch inoltra il frame a tutte le interfacce tranne $x$.
+	\item Vi è una voce che associa \texttt{AA-AA-AA-AA-AA-AA} all'interfaccia $x$. In questo caso la destinazione proviene dal segmento di rete da cui ha ricevuto il frame, pertanto lo scarta
+	\item Una voce della tabella associa \texttt{AA-AA-AA-AA-AA-AA} a un'interfaccia $y$ con $y \neq x $. In questo caso il frame viene inoltrato su $y$.
+\end{enumerate}
+
+\subsubsection*{Autoapprendimento}
+Gli switch hanno la proprietà di costruire automaticamente e dinamicamente le proprie tabelle, senza l'ausilio di un operatore o di un protocollo. Questa capacità è ottenuta nel seguente modo:
+
+\begin{enumerate}
+	\item La tabella è inizialmente vuota
+	\item Di ogni frame che riceve, lo switch archivia nella sua tabella l'indirizzo MAC del campo sorgente del frame, l'interfaccia da cui è arrivato e il momento di arrivo. In tal modo registra il segmento di rete su cui risiese il nodo trasmittente. Quando tutti i nodi della sottorete avranno inviato un frame, allora la tabella sarà completa.
+	\item Dopo un certo periodo di tempo in cui lo switch non riceve un frame da un determinato indirizzo sorgente, lo elimina dalla tabella	
+\end{enumerate}
+
+Gli switch sono dunque dispositivi plug-and-play
+
+\subsubsection*{Proprietà della commutazione a livello di collegamento}
+Possiamo identificare svariati vantaggi utilizzando gli switch al posto dei collegamenti broadcast come i bus o gli hub:
+\begin{enumerate}
+	\item Eliminazione delle collisioni: non vi è spreco di banda a causa delle collisioni. Gli switch mettono i frame nei propri buffer e non trasmettono più di un frame per ogni segmento in un certo istante
+	\item Collegamenti eterogenei: Grazie agli switch i vari collegamenti possono funzionare a velocità diverse e usare cavi diversi
+	\item Gestione: Se una scheda di rete ha un malfunzionamento, lo switch lo rileva e la disconnette dalla rete
+\end{enumerate}
+
+\subsubsection*{Switch e router a confronto}
+Sia i router che gli switch sono commutatori store-and-forward. Il primo è a livello di rete mentre il secondo è a livello collegamento.
+
+La topologia di una rete switch deve necessariamente essere ad albero per evitare cicli di frame broadcast. Inoltre se la rete è troppo grande richiede enormi tabelle ARP.
+
+Nei router i datagrammi rischiano di percorrere cicli solo se le tabelle di routing sono configurate male. Anche in quel caso, però, il danno sarebbe limitato grazie al TTL. Pertanto qui non siamo limitati a una topologia ad albero. I router, però, non sono plug-and-play e a causa del fatto che devono elaborare protocolli a un livello più sopra sono generalmente più lenti.
+
+\subsection*{6.4.4 LAN virtuali}
+Immaginiamo una LAN universitaria suddivisa in dipartimenti grazie a degli switch. Con questo approccio ci sono delle problematiche:
+\begin{itemize}
+	\item Mancanza di isolamento del traffico: Il traffico broadcast come quello ARP, DHCP o messaggi la cui destinazione è ancora sconosciuta per gli switch attraversano l'intera rete accademica.
+	\item Uso inefficiente degli switch: Per ogni nuovo dipartimento è necessario comprare un nuovo switch.
+	\item Gestione inefficiente degli utenti: Se un utente si muove tra più dipartimenti, deve collegarsi di volta in volta a switch differenti.
+\end{itemize}
+
+Queste difficoltà possono essere superate grazie alle LAN Virtuali (VLAN).
+
+Gli host all'interno di una VLAN comunicano come se fossero i tutti e i soli connessi allo switch. Inoltre, una VLAN è un dominio broadcast, il che significa che i messaggi broadcast non vengono replicati sulle altre VLAN.
+
+In una VLAN le interfacce di uno switch vengono suddivise in gruppi, ognuno dei quali costituisce una VLAN.
+
+Isolando le VLAN, come trasmettiamo il traffico da un dipartimento a un altro? Lo facciamo per mezzo di un router (che può essere anche integrato nello stesso apparato di rete). I due dipartimenti apparirebbero come se ognuno avesse degli switch separati interconnessi da un router.
+
+Adesso immaginiamo di avere più switch: l'originale A suddiviso in VLAN Ingegneria e VLAN Filosofia e lo switch B appena comprato. Vogliamo fare in modo che B possa egualmente essere suddiviso in VLAN Ingegneria e VLAN Filosofia e che le VLAN dello stesso tipo, seppure su switch diversi, possano parlarsi.
+
+Una soluzione è connettere un cavo da una porta VLAN Ingegneria di A a una porta dello switch B e fare lo stesso con la VLAN di Filosofia. Dopodiché suddividere lo switch B in 2 VLAN. (Figura 6.26a). Abbiamo sprecato 2 porte sullo switch A e 2 porte sullo switch B. Non è una soluzione scalabile.
+
+Un altro approccio è chiamato VLAN Trunking: una porta speciale, detta porta di trunking, viene configurata sui due switch. La porta di trunking appartiene a tutte le VLAN. I frame inoltrati a una qualunque VLAN vengono inoltrati anche sulla porta di trunking. Questo fa sì che il risultato è come se fosse un unico grande switch.
+
+Ci siamo concentrati sulle VLAN basate sulle porte, ma esistono anche VLAN basate su indirizzi MAC (un insieme di indirizzi MAC fa parte di una VLAN, un altro insieme fa parte di un'altra VLAN).
+
+\section*{6.5 Canali virtuali: una rete come un livello di collegamento}
+Abbiamo iniziato il capitolo considerando il collegamento come un cavo fisico che collega due host. In realtà, il collegamento potrebbe essere una complessa struttura commutata. Gli host continuano a vederlo come se fosse un singolo cavo.
 
 
 
