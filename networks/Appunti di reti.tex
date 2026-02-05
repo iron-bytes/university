@@ -353,7 +353,7 @@ HTTP definisce in che modo i client web richiedono le pagine ai web server e com
 
 HTTP utilizza TCP come protocollo di trasporto. In questo modo HTTP non si deve preoccupare dei dati smarriti, di perdite e riordinamento dei pacchetti.
 
-Il client invia richieste e riceve risposte HTTP tramite la propria interfaccia socket. Analogamente, il server riceve richieste e invia risposte tramite la propria.
+Il client invia richieste e riceve risposte HTTP tramite una propria interfaccia socket. Analogamente, il server riceve richieste e invia risposte tramite una delle sue.
 
 Il server invia i file richiesti al client senza memorizzare alcune informazione di stato su di esso. Per questo motivo viene detto protocollo senza memoria di stato (stateless).
 
@@ -372,7 +372,7 @@ Ecco cosa avviene quando HTTP usa connessioni non persistenti, supponendo che il
 
 Come abbiamo visto, ciascuna connessione TCP trasporta solo un messaggio di richiesta e uno di risposta. Se la pagina index.html avesse referenziato 10 oggetti al suo interno, avrebbe generato 11 connessioni TCP, ognuna per ciasun oggetto.
 
-Definiamo essere Round Trip Time (RTT) il tempo che intercorre tra l'invio di una richiesta e la ricezione (del primo bit) della risposta. Quando il client vuole ottenere una risorsa HTTP, apre una connessione TCP con il server il quale risponde con una conferma. Il tempo per fare ciò è almeno 1 RTT. Dopodiché il client manda un messaggio al server che contiene (1) a sua volta una conferma di avvenuta ricezione e (2) la richiesta HTTP della risorsa. A questo punto il server risponde con il file HTML. Il tempo per fare ciò è almeno un altro RTT.
+Definiamo essere Round Trip Time (RTT) il tempo che intercorre tra l'invio di una richiesta e la ricezione della risposta. Quando il client vuole ottenere una risorsa HTTP, apre una connessione TCP con il server il quale risponde con una conferma. Il tempo per fare ciò è almeno 1 RTT. Dopodiché il client manda un messaggio al server che contiene (1) a sua volta una conferma di avvenuta ricezione e (2) la richiesta HTTP della risorsa. A questo punto il server risponde con il file HTML. Il tempo per fare ciò è almeno un altro RTT.
 
 \subsubsection{HTTP con connesioni persistenti}
 Le connessioni non persistenti presentano alcuni limiti: il primo è che per ogni oggetto richiesto occorre stabilire e mantenere una nuova connessione. In secondo luogo ciascun oggetto subisce un ritardo di 2 RTT. Il primo per stabilire la connessione TCP il secondo per richiedere e ricevere un oggetto.
@@ -515,10 +515,10 @@ Vediamo cosa accade nel dettaglio:
 	\label{fig:esempio}
 \end{figure}
 
-Il client (o i client) riusano la stessa connessione TCP se hanno altri messaggi da inviare al server, pertanto, SMTP fa uso di connessioni persistenti.
+Il client riusa la stessa connessione TCP se ha altri messaggi da inviare al server, pertanto, SMTP fa uso di connessioni persistenti.
 
 \subsection*{2.3.2 Confronto con HTTP}
-HTTP trasferisce i file da un web server a un web client, mentre SMTP trasferisce messaggi di posta elettronica da un mail server a un altro.
+HTTP trasferisce i file da un web server a un web client, mentre SMTP trasferisce messaggi di posta elettronica (anche) da un mail server a un altro.
 
 Sia HTTP standard che SMTP fanno uso di connessioni persistenti.
 
@@ -577,7 +577,7 @@ Questo è il funzionamento quando si richiede una pagina Web:
 	\item Il browser estrae il nome dell'host dall'URL e lo passa al lato client dell'applicazione DNS
 	\item Il client DNS invia un'interrogazione contenente l'hostname a un server DNS
 	\item Il client riceve una risposta che include l'indirizzo IP corrispondente all'hostname
-	\item Una volta ricevuto l'indirizzo IP dal DNS, il browser dò inizio a una connessione TCP sulla porta 80 a quell'indirizzo
+	\item Una volta ricevuto l'indirizzo IP dal DNS, il browser dà inizio a una connessione TCP sulla porta 80 a quell'indirizzo
 \end{enumerate}
 
 Pertanto, il sistema DNS aggiunge un ritardo aggiuntivo alle applicazioni Internet che lo utilizzano.
@@ -721,18 +721,18 @@ Ora svolgiamo un’analisi analoga per l’architettura P2P, mantenendo le stess
 
 Ora facciamo le seguenti osservazioni:
 \begin{itemize}
-	\item All'inizio della distribuzine solo $P_{1}$ dispone del file. Esso deve necessariamente inviare ciascun bit del file almeno una volta. Quinid il tempo di distribuzione minimo è $F/u_{s}$. Si noti che un bit inviato una volta dal server potrebbe non essere inviato di nuovo (ecco perché non è $NF/u_{s}$)
+	\item All'inizio della distribuzione solo $P_{1}$ dispone del file. Esso deve necessariamente inviare ciascun bit del file almeno una volta. Quindi il tempo di distribuzione minimo è $F/u_{s}$. Si noti che un bit inviato una volta dal server potrebbe non essere inviato di nuovo (ecco perché non è $NF/u_{s}$)
 	\item Il peer con la velocità di download più bassa non può ottenere tutti i bit del file in meno di $F/d_{min}$. Quindi il tempo di distribuzione è perlomeno $F/d_{min}$
 	\item Devono essere consegnati $F$ bit a ciascuno degli $N$ peer per un totale di $NF$ bit. Questi $NF$ bit non possono viaggiare sulla rete a una velocità più elevata di $u_{tot} = u_{s} + u_1 ... + u_{N}$ quindi il tempo di distribuzione minimo è almeno $NF/u_{tot}$
 \end{itemize}
 
 Mettendo insieme queste considerazioni otteniamo che
-$$  D_{P2P} \geq MAX\left\{ \frac{F}{U_s}, \frac{F}{d_{min}}, \frac{NF}{u_{tot}} \right\}$$
+$$  D_{P2P} \geq MAX\left\{ \frac{F}{u_s}, \frac{F}{d_{min}}, \frac{NF}{u_{tot}} \right\}$$
 
 Si può dimostrare che è una disuguaglianza stretta, ovvero è possibile schedulare il trasferimento del file in modo tale che 
 
 
-$$  D_{P2P} = MAX\left\{ \frac{F}{U_s}, \frac{F}{d_{min}}, \frac{NF}{u_{tot}} \right\}$$
+$$  D_{P2P} = MAX\left\{ \frac{F}{u_s}, \frac{F}{d_{min}}, \frac{NF}{u_{tot}} \right\}$$
 
 La dimostrazioneè in un paper denominato "Peer-Assisted File Distribution: The Minimum Distribution Time (Rakesh Kumar, Keith W. Ross)". La dimostrazione mostra che la disuguaglianza è in effetti stretta. Suddetta dimostrazione è particolarmente laboriosa da un punto in poi e si preferisce darla per buona.
 
@@ -747,7 +747,7 @@ Qualunque peer può lasciare il torrent in qualsiasi momento, anche solo con un 
 
 Per ciascun torrent vi è un nodo chiamato tracker. Quando un peer entra a far parte di un torrent, si registra presso il tracker e periodicamente lo informa che è ancora nel torrent. In questo modo il tracker tiene traccia dei peer che stanno partecipando al torrent.
 
-Si supponga Alice decida di unirsi al torrent. Il tracker seleziona in modo casuale un sottoinsieme di peer dall'insieme dei peer che stanno partecipando a quel torrent e invia gli indirizzi IP di questi host ad Alice, la quale stabilisce contrmporaneamente con loro delle connessioni TCP. Chiamiamo questo sottorinsieme "peer vicini". I peer vicini cambiano nel tempo perché (1) potrebbero disconnettersi e (2) dei peer potrebbero stabilire di loro iniziativa connessioni con Alice.
+Si supponga Alice decida di unirsi al torrent. Il tracker seleziona in modo casuale un sottoinsieme di peer dall'insieme dei peer che stanno partecipando a quel torrent e invia gli indirizzi IP di questi host ad Alice, la quale stabilisce contemporaneamente con loro delle connessioni TCP. Chiamiamo questo sottorinsieme "peer vicini". I peer vicini cambiano nel tempo perché (1) potrebbero disconnettersi e (2) dei peer potrebbero stabilire di loro iniziativa connessioni con Alice.
 
 Periodicamente Alice chiede ai suoi peer vicini la lista del chunk del file in loro possesso e richiede quelli che ancora le mancano. La modalità con cui richiede i chunk si chiama rarest first, ovvero richiede per prima quelli con il minor numero di copie tra i peer. In questo modo si tenta di mantenere il numero di copie per ogni chunk simile.
 
@@ -775,7 +775,7 @@ Lo streaming HTTP presenta un grande svantaggio: i client ricevono sempre la ste
 \subsection*{2.6.3 Reti per la distribuzione di contenuti}
 L'approccio più diretto per le aziende di streaming sarebbe quello di creare un enorme server nel quale memorizzare tutti i video e mandarli in streaming a chiunque li richieda. Questo presenta tre svantaggi principali: (1) il client potrebbe essere lontano dal server. Più il cammino di un pacchetto è lungo più è probabile incontrare un collo di bottiglia, nonché i vari ritardi si accumulano; (2) un video molto popolare verrebbe inviato tante volte sullo stesso collegamento ; (3) c'è un singolo punto di rottura.
 
-Per superare questi problemi si usano le CDN (content distirbution network). Una CDN gestisce server distribuiti e memorizza copie dei video e di altri contenuti in uno o più. Quando un utente richiede una risorsa, la CDN lo regirige verso il server in grado di offrire il servizio migliore.
+Per superare questi problemi si usano le CDN (content distribution network). Una CDN gestisce server distribuiti e memorizza copie dei video e di altri contenuti in uno o più. Quando un utente richiede una risorsa, la CDN lo redirige verso il server in grado di offrire il servizio migliore.
 
 Vi sono due approcci alla dislocazione dei server della CDN:
 \begin{itemize}
