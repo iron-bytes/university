@@ -47,7 +47,7 @@ Per spostare i dati in una rete esistono due approcci: commutazione di pacchetto
 	
 Nelle reti a commutazione di circuito, le risorse necessarie sono allocate per l'intera durata della comunicazione tra i sistemi periferici. Nelle reti a commutazione di pacchetto, invece, tali risorse non sono riservate e sono allocate in funzione della necessità della rete.
 	
-Le reti telefoniche sono esempi di rete a commutazione di circuito in quanto il canale resta aperto anche in assenza di comunicazione.
+Le reti telefoniche sono esempi di rete a commutazione di circuito in quanto si continua a trasmettere anche in assenza di comunicazione.
 	
 Quando la rete stabilisce un circuito, viene riservata anche una certa larghezza di banda, pertanto, il mittente può trasferire i dai a una velocità costante garantita.
 	
@@ -141,11 +141,10 @@ Con $La/R$ si denota l'intensità di traffico e il risultato è un numero adimen
 	In questo caso il primo pacchetto inizia a uscire dalla coda immediatamente, il secondo pacchetto deve aspettare $L/R$ secondi prima che il suo primo bit esca dalla coda, il terzo deve aspettare $2 * \frac{L}{R}$, il quarto deve aspettare $3 * \frac{L}{R}$ secondi e così via. Più in generale, il pacchetto N° deve aspettare $(N-1) * \frac{L}{R}$.
 	
 	Per rendere più chiaro il concetto facciamo un esempio. Si supponga che arrivino 10 pacchetti all'istante 0 ognuno grande 50bit con una velocità di trasmissione $R$ pari a  1000bit/s. Il primo pacchetto inizia a uscire dalla coda subito, ma il primo bit del secondo pacchetto deve aspettare $\frac{L}{R} = \frac{50}{1000} = 0.05s$ prima che l'intero pacchetto precedente sia completamente uscito. Il decimo pacchetto deve aspettare $(9) * 0.05 = 0.45s$ e, nel momento in cui il suo trasferimento sul collegamento sarà terminato, a tempo $0.5$, ne subentrano altri 10, di cui il primo non deve aspettare nulla prima che inizia a essere trasferito.
-	
-	Questo è il cosiddetto "burst", ovvero si tratta di pacchetti che arrivano simultaneamente. Infatti, nell'esempio sopracitato, se arrivano 500bit/s in un tempo sufficientemente dilazionato, il nodo da 1000 bit/s non avrebbe problemi a smaltirli.
-	Per essere più precisi devono arrivare in un tempo dilazionato almeno $L/R$ secondi l'uno dall'altro affinché non si creino code.
 
 	Ciò dimostra che la condizione $La/R \leq 1$, non garantisce assenza di attese.
+	
+	Ciò che abbiamo appena descritto è un classico esempio di effetto "burst", ovvero arrivano troppi pacchetti simultaneamente. Se infatti i 500 bit fossero arrivati in un tempo sufficientemente dilazionato (almeno $\frac{L}{R}$ secondi l'uno dall'altro per dare il tempo di smaltire il pacchetto precedente), allora non si sarebbero verificate code.
 
 \end{itemize}
 	
@@ -372,7 +371,9 @@ Ecco cosa avviene quando HTTP usa connessioni non persistenti, supponendo che il
 
 Come abbiamo visto, ciascuna connessione TCP trasporta solo un messaggio di richiesta e uno di risposta. Se la pagina index.html avesse referenziato 10 oggetti al suo interno, avrebbe generato 11 connessioni TCP, ognuna per ciasun oggetto.
 
-Definiamo essere Round Trip Time (RTT) il tempo che intercorre tra l'invio di una richiesta e la ricezione della risposta. Quando il client vuole ottenere una risorsa HTTP, apre una connessione TCP con il server il quale risponde con una conferma. Il tempo per fare ciò è almeno 1 RTT. Dopodiché il client manda un messaggio al server che contiene (1) a sua volta una conferma di avvenuta ricezione e (2) la richiesta HTTP della risorsa. A questo punto il server risponde con il file HTML. Il tempo per fare ciò è almeno un altro RTT.
+Definiamo essere Round Trip Time (RTT) il tempo che intercorre tra l'invio del primo bit della richiesta e la ricezione del primo bit della risposta. Questa scelta dà un RTT che rappresenta la latenza della rete, senza includere il ritardo di trasmissione del mittente stesso.
+
+Quando il client vuole ottenere una risorsa HTTP, apre una connessione TCP con il server il quale risponde con una conferma. Il tempo per fare ciò è almeno 1 RTT. Dopodiché il client manda un messaggio al server che contiene (1) a sua volta una conferma di avvenuta ricezione e (2) la richiesta HTTP della risorsa. A questo punto il server risponde con il file HTML. Il tempo per fare ciò è almeno un altro RTT.
 
 \subsubsection{HTTP con connesioni persistenti}
 Le connessioni non persistenti presentano alcuni limiti: il primo è che per ogni oggetto richiesto occorre stabilire e mantenere una nuova connessione. In secondo luogo ciascun oggetto subisce un ritardo di 2 RTT. Il primo per stabilire la connessione TCP il secondo per richiedere e ricevere un oggetto.
@@ -395,7 +396,7 @@ Notiamo fin da subito che il testo è scritto in codifica ASCII. Consiste di rig
 
 \begin{itemize}
 	\item La prima riga presenta tre campi: il campo metodo, il campo URL e il campo versione di HTTP. Il campo metodo è GET quando viene richiesto un oggetto, POST quando l'utente riempie un form (l'utente sta ancora richiedendo una pagina web al server, ma i contenuti specifici della pagina dipendono da ciò che l'utente ha inserito). Si può usare GET anche per riempire un form, includendo i dati nell'URL (query string). Poi vi è il metodo HEAD, e quando un server riceve un metodo di questo tipo risponde ma tralascia gli oggetti richiesti. PUT consente di inviare un oggetto a un percorso specifico e DELETE permette di cancellare un oggetto su un server. In realtà questi metodi (o verbi) HTTP sono solo convenzioni. Il protocollo HTTP non impone al server di comportarsi in un certo modo.
-	\item Host specifica l'host su cui risiede l'oggetto. Si potrebbe pensare sia superflua dato che già in corso una connessione TCP con l'host ma quest'informazione serve per la cache dei proxy
+	\item Host specifica l'host su cui risiede l'oggetto. Si potrebbe pensare sia superflua dato che già in corso una connessione TCP con l'host ma in realtà non è così: potremmo infatti essere collegati a un proxy intermedio (come vedremo più avanti), pertanto è necessario specificare il nome dell'host originale
 	\item Con la terza linea il browser specifica che vuole che il server chiuda la connessione dopo aver inviato l'oggetto richiesto.
 	\item User-agent specifica quale browser sta effettuando la richiesta
 	\item Accept-language specifica la lingua richiesta.
@@ -791,7 +792,7 @@ Quando un browser chiede di recuperare uno specifico video, la CDN deve intercet
 Vediamo cosa succede quando l'utente chiede https://www.youtube.com/XYZABC:
 \begin{itemize}
 	\item Il suo host invia una richiesta DNS a www.youtube.com
-	\item Il server autoritativo di YouTube passa risponde con un server autoritativo di KingCDN tipo kingcdn.com
+	\item Il server autoritativo di YouTube risponde con un server autoritativo di KingCDN tipo kingcdn.com
 	\item KingCDN rileva XYZABC e risponde al LDNS con il server più adatto
 	\item Il client si collega a questo server
 \end{itemize}
