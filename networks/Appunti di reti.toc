@@ -19,7 +19,7 @@
 \contentsline {subsubsection}{Livello fisico}{11}{}%
 \contentsline {chapter}{\numberline {2}Livello di applicazione}{13}{}%
 \contentsline {subsubsection}{HTTP con connesioni persistenti}{16}{}%
-\contentsline {paragraph}{Esempio}{22}{}%
+\contentsline {paragraph}{Esempio}{23}{}%
 \contentsline {paragraph}{Type=A}{24}{}%
 \contentsline {paragraph}{Type=NS}{24}{}%
 \contentsline {paragraph}{Type=NS}{24}{}%
@@ -28,3 +28,4 @@
 \contentsline {chapter}{\numberline {4}Livello di rete: piano dei dati}{49}{}%
 \contentsline {chapter}{\numberline {5}Livello di rete: piano di controllo}{59}{}%
 \contentsline {chapter}{\numberline {6}Livello di collegamento e reti locali}{67}{}%
+\contentsline {chapter}{\numberline {7}Network Security}{77}{}%

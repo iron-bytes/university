@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.10.18)  6 FEB 2026 00:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2025.10.18)  8 FEB 2026 18:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -699,28 +699,28 @@ Capitolo 2.
 [13
 
 ]
-Overfull \hbox (12.02382pt too wide) in paragraph at lines 287--288
+Overfull \hbox (12.02382pt too wide) in paragraph at lines 286--287
 \OT1/cmr/m/n/10 Un pro-to-collo a liv-ello di trasporto potrebbe fornire un thr
 ough-put garan-tito. Con tale servizio l'applicazione
  []
 
 [14] [15] [16]
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-388.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 388.
+389.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 389.
 
 
 LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbackslash' on input line 388.
+(Font)              for symbol `textbackslash' on input line 389.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 386--393
+Underfull \hbox (badness 10000) in paragraph at lines 387--394
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 386--393
+Underfull \hbox (badness 10000) in paragraph at lines 387--394
 
  []
 
@@ -728,20 +728,20 @@ Underfull \hbox (badness 10000) in paragraph at lines 386--393
 File: images/http_request_message.png Graphic file (type png)
 <use images/http_request_message.png>
 Package pdftex.def Info: images/http_request_message.png  used on input line 40
-6.
+7.
 (pdftex.def)             Requested size: 226.48395pt x 128.96721pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 414--424
+Underfull \hbox (badness 10000) in paragraph at lines 415--425
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 414--424
+Underfull \hbox (badness 10000) in paragraph at lines 415--425
 
  []
 
 [17 <./images/http_request_message.png>] [18]
-Overfull \hbox (18.8377pt too wide) in paragraph at lines 477--478
+Overfull \hbox (18.8377pt too wide) in paragraph at lines 478--479
 []\OT1/cmr/m/n/10 In cache mem-o-rizza sia l'oggetto che la data di ul-tima mod
 -i-fica pre-sente nell'intestazione \OT1/cmtt/m/n/10 Last-Modified 
  []
@@ -750,23 +750,23 @@ Overfull \hbox (18.8377pt too wide) in paragraph at lines 477--478
 <images/SMTP_example.png, id=83, 1153.30875pt x 297.11pt>
 File: images/SMTP_example.png Graphic file (type png)
 <use images/SMTP_example.png>
-Package pdftex.def Info: images/SMTP_example.png  used on input line 513.
+Package pdftex.def Info: images/SMTP_example.png  used on input line 514.
 (pdftex.def)             Requested size: 226.48395pt x 58.34196pt.
  [20 <./images/SMTP_example.png>] [21] [22]
 <images/dns_query_example.png, id=95, 546.04pt x 576.1525pt>
 File: images/dns_query_example.png Graphic file (type png)
 <use images/dns_query_example.png>
-Package pdftex.def Info: images/dns_query_example.png  used on input line 628.
+Package pdftex.def Info: images/dns_query_example.png  used on input line 629.
 (pdftex.def)             Requested size: 226.48395pt x 238.97574pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 642--646
+ [23 <./images/dns_query_example.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 643--647
 
  []
 
-[23 <./images/dns_query_example.png>] [24] [25] [26] [27] [28]
+[24] [25] [26] [27] [28]
 Capitolo 3.
 
-Overfull \hbox (1.50514pt too wide) in paragraph at lines 826--827
+Overfull \hbox (1.50514pt too wide) in paragraph at lines 827--828
 []\OT1/cmr/m/n/10 Un pro-to-collo di trasporto non for-nisce al-cuna in-di-cazi
 one su come i mes-saggi siano trasfer-iti all'interno
  []
@@ -778,45 +778,45 @@ one su come i mes-saggi siano trasfer-iti all'interno
 File: images/MultiplexingAndDemultiplexing.png Graphic file (type png)
 <use images/MultiplexingAndDemultiplexing.png>
 Package pdftex.def Info: images/MultiplexingAndDemultiplexing.png  used on inpu
-t line 850.
+t line 851.
 (pdftex.def)             Requested size: 271.7835pt x 203.8323pt.
  [30 <./images/MultiplexingAndDemultiplexing.png>] [31]
 <images/UDP_packet_structure.png, id=127, 596.2275pt x 464.73625pt>
 File: images/UDP_packet_structure.png Graphic file (type png)
 <use images/UDP_packet_structure.png>
 Package pdftex.def Info: images/UDP_packet_structure.png  used on input line 91
-7.
+8.
 (pdftex.def)             Requested size: 226.48395pt x 176.53069pt.
  [32 <./images/UDP_packet_structure.png>]
 <images/rdt_1.0.png, id=131, 813.0375pt x 734.745pt>
 File: images/rdt_1.0.png Graphic file (type png)
 <use images/rdt_1.0.png>
-Package pdftex.def Info: images/rdt_1.0.png  used on input line 960.
+Package pdftex.def Info: images/rdt_1.0.png  used on input line 961.
 (pdftex.def)             Requested size: 226.48395pt x 204.67332pt.
  [33 <./images/rdt_1.0.png>]
 <images/rdt_2.0.png, id=135, 865.2325pt x 790.955pt>
 File: images/rdt_2.0.png Graphic file (type png)
 <use images/rdt_2.0.png>
-Package pdftex.def Info: images/rdt_2.0.png  used on input line 986.
+Package pdftex.def Info: images/rdt_2.0.png  used on input line 987.
 (pdftex.def)             Requested size: 452.9679pt x 414.08691pt.
  [34 <./images/rdt_2.0.png>]
 <images/rdt_sender_2.1.png, id=139, 940.51375pt x 615.29875pt>
 File: images/rdt_sender_2.1.png Graphic file (type png)
 <use images/rdt_sender_2.1.png>
-Package pdftex.def Info: images/rdt_sender_2.1.png  used on input line 1008.
+Package pdftex.def Info: images/rdt_sender_2.1.png  used on input line 1009.
 (pdftex.def)             Requested size: 452.9679pt x 296.33524pt.
 
 [35 <./images/rdt_sender_2.1.png>]
 <images/rdt_receiver_2.1.png, id=143, 1066.98625pt x 561.09625pt>
 File: images/rdt_receiver_2.1.png Graphic file (type png)
 <use images/rdt_receiver_2.1.png>
-Package pdftex.def Info: images/rdt_receiver_2.1.png  used on input line 1016.
+Package pdftex.def Info: images/rdt_receiver_2.1.png  used on input line 1017.
 (pdftex.def)             Requested size: 452.9679pt x 238.20161pt.
  [36 <./images/rdt_receiver_2.1.png>]
 <images/gbn.png, id=148, 962.59625pt x 234.8775pt>
 File: images/gbn.png Graphic file (type png)
 <use images/gbn.png>
-Package pdftex.def Info: images/gbn.png  used on input line 1078.
+Package pdftex.def Info: images/gbn.png  used on input line 1079.
 (pdftex.def)             Requested size: 452.9679pt x 110.52504pt.
 
 [37] [38 <./images/gbn.png>]
@@ -824,14 +824,14 @@ Package pdftex.def Info: images/gbn.png  used on input line 1078.
 File: images/tcp_segment_structure.png Graphic file (type png)
 <use images/tcp_segment_structure.png>
 Package pdftex.def Info: images/tcp_segment_structure.png  used on input line 1
-135.
+136.
 (pdftex.def)             Requested size: 362.37569pt x 283.50488pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [39]
 [40 <./images/tcp_segment_structure.png>] [41] [42] [43] [44] [45] [46]
-Underfull \hbox (badness 10000) in paragraph at lines 1379--1382
+Underfull \hbox (badness 10000) in paragraph at lines 1380--1383
 
  []
 
@@ -844,54 +844,54 @@ Capitolo 4.
 File: images/CommutazioneTramiteBus.png Graphic file (type png)
 <use images/CommutazioneTramiteBus.png>
 Package pdftex.def Info: images/CommutazioneTramiteBus.png  used on input line 
-1529.
+1530.
 (pdftex.def)             Requested size: 135.89174pt x 135.88232pt.
 <images/CommutazioneReteDiInterconnessione.png, id=198, 724.95844pt x 472.76625
 pt>
 File: images/CommutazioneReteDiInterconnessione.png Graphic file (type png)
 <use images/CommutazioneReteDiInterconnessione.png>
 Package pdftex.def Info: images/CommutazioneReteDiInterconnessione.png  used on
- input line 1535.
+ input line 1536.
 (pdftex.def)             Requested size: 135.89174pt x 88.6146pt.
  [51 <./images/CommutazioneTramiteBus.png (PNG copy)>]
-Underfull \hbox (badness 10000) in paragraph at lines 1560--1564
+Underfull \hbox (badness 10000) in paragraph at lines 1561--1565
 
  []
 
 [52 <./images/CommutazioneReteDiInterconnessione.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1582--1586
+Underfull \hbox (badness 10000) in paragraph at lines 1583--1587
 
  []
 
 [53]
-Underfull \hbox (badness 10000) in paragraph at lines 1640--1644
+Underfull \hbox (badness 10000) in paragraph at lines 1641--1645
 
  []
 
 [54]
-Underfull \hbox (badness 10000) in paragraph at lines 1651--1656
+Underfull \hbox (badness 10000) in paragraph at lines 1652--1657
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1651--1656
+Underfull \hbox (badness 10000) in paragraph at lines 1652--1657
 
  []
 
 [55]
-Overfull \hbox (25.00406pt too wide) in paragraph at lines 1690--1691
+Overfull \hbox (25.00406pt too wide) in paragraph at lines 1691--1692
 \OT1/cmr/m/n/10 Esistono in-nu-merevoli host (in-ter-facce) con lo stesso in-d-
 i-rizzo IP pri-vato, ma come viene gestito l'indirizzamento
  []
 
 
-Overfull \hbox (1.86626pt too wide) in paragraph at lines 1710--1711
+Overfull \hbox (1.86626pt too wide) in paragraph at lines 1711--1712
 []\OT1/cmr/m/n/10 Intestazione ot-timizza: Al-cuni campi di IPv4 sono stati eli
 m-i-nati ren-dendo l'intestazione a lunghezza
  []
 
 [56]
-Overfull \hbox (16.94963pt too wide) in paragraph at lines 1746--1747
+Overfull \hbox (16.94963pt too wide) in paragraph at lines 1747--1748
 []\OT1/cmr/m/n/10 Ogni riga in una tabella di in-oltro match-action con-tiene (
 1) un in-sieme di val-ori dei campi dell'intestazione
  []
@@ -904,17 +904,17 @@ Capitolo 5.
 [59
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1861--1863
+Underfull \hbox (badness 10000) in paragraph at lines 1862--1864
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1861--1863
+Underfull \hbox (badness 10000) in paragraph at lines 1862--1864
 
  []
 
 [60]
-Underfull \hbox (badness 10000) in paragraph at lines 1874--1878
+Underfull \hbox (badness 10000) in paragraph at lines 1875--1879
 
  []
 
@@ -922,19 +922,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 1874--1878
 <images/eBPG_and_iBGP.png, id=237, 1262.7175pt x 550.055pt>
 File: images/eBPG_and_iBGP.png Graphic file (type png)
 <use images/eBPG_and_iBGP.png>
-Package pdftex.def Info: images/eBPG_and_iBGP.png  used on input line 1974.
+Package pdftex.def Info: images/eBPG_and_iBGP.png  used on input line 1975.
 (pdftex.def)             Requested size: 452.9679pt x 197.31462pt.
  [63 <./images/eBPG_and_iBGP.png>] [64] [65] [66
 
 ]
 Capitolo 6.
 [67]
-Underfull \hbox (badness 10000) in paragraph at lines 2071--2074
+Underfull \hbox (badness 10000) in paragraph at lines 2072--2075
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2076--2077
+Underfull \hbox (badness 10000) in paragraph at lines 2077--2078
  []$[]  \OMS/cmtt/m/n/10 j []$ 
  []
 
@@ -942,42 +942,46 @@ Underfull \hbox (badness 10000) in paragraph at lines 2076--2077
 File: images/bdimensional_parity_check.png Graphic file (type png)
 <use images/bdimensional_parity_check.png>
 Package pdftex.def Info: images/bdimensional_parity_check.png  used on input li
-ne 2087.
+ne 2088.
 (pdftex.def)             Requested size: 226.48395pt x 129.30846pt.
 [68 <./images/bdimensional_parity_check.png>] [69]
 <images/slotted_aloha.png, id=262, 969.6225pt x 521.95pt>
 File: images/slotted_aloha.png Graphic file (type png)
 <use images/slotted_aloha.png>
-Package pdftex.def Info: images/slotted_aloha.png  used on input line 2164.
+Package pdftex.def Info: images/slotted_aloha.png  used on input line 2165.
 (pdftex.def)             Requested size: 362.37569pt x 195.06972pt.
  [70 <./images/slotted_aloha.png>]
 <images/aloha_interference.png, id=266, 920.43875pt x 395.4775pt>
 File: images/aloha_interference.png Graphic file (type png)
 <use images/aloha_interference.png>
-Package pdftex.def Info: images/aloha_interference.png  used on input line 2188
+Package pdftex.def Info: images/aloha_interference.png  used on input line 2189
 .
 (pdftex.def)             Requested size: 362.37569pt x 155.70198pt.
 <images/CSMA_space_time_diagram.png, id=267, 737.75626pt x 810.02625pt>
 File: images/CSMA_space_time_diagram.png Graphic file (type png)
 <use images/CSMA_space_time_diagram.png>
 Package pdftex.def Info: images/CSMA_space_time_diagram.png  used on input line
- 2203.
+ 2204.
 (pdftex.def)             Requested size: 226.48395pt x 248.67062pt.
  [71 <./images/aloha_interference.png> <./images/CSMA_space_time_diagram.png>]
-Overfull \hbox (43.39668pt too wide) in paragraph at lines 2236--2237
+Overfull \hbox (43.39668pt too wide) in paragraph at lines 2237--2238
 \OT1/cmr/m/n/10 Gli in-d-i-rizzi MAC sono com-posti da 6 byte, soli-ta-mente sc
 ritti in modo esadec-i-male. Es-em-pio: \OT1/cmtt/m/n/10 49-BD-D2-C7-56-2A\OT1/
 cmr/m/n/10 .
  []
 
 [72] [73]
-Overfull \hbox (27.91977pt too wide) in paragraph at lines 2308--2310
+Overfull \hbox (27.91977pt too wide) in paragraph at lines 2309--2311
 []\OT1/cmr/m/n/10 Ipotizziamo che un frame con in-d-i-rizzo di des-ti-nazione \
 OT1/cmtt/m/n/10 AA-AA-AA-AA-AA-AA \OT1/cmr/m/n/10 giunga allo switch sull'inter
 faccia
  []
 
-[74] [75] [76] (./Appunti di reti.aux)
+[74] [75] [76]
+Capitolo 7.
+[77
+
+] [78] [79] (./Appunti di reti.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -1012,10 +1016,10 @@ pe1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
 blic/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmtt8.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb
 >
-Output written on "Appunti di reti.pdf" (76 pages, 2107092 bytes).
+Output written on "Appunti di reti.pdf" (79 pages, 2119058 bytes).
 PDF statistics:
- 371 PDF objects out of 1000 (max. 8388607)
- 232 compressed objects within 3 object streams
+ 381 PDF objects out of 1000 (max. 8388607)
+ 239 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
  103 words of extra memory for PDF output out of 10000 (max. 10000000)
 

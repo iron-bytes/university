@@ -2367,11 +2367,104 @@ Ci siamo concentrati sulle VLAN basate sulle porte, ma esistono anche VLAN basat
 Abbiamo iniziato il capitolo considerando il collegamento come un cavo fisico che collega due host. In realtà, il collegamento potrebbe essere una complessa struttura commutata. Gli host continuano a vederlo come se fosse un singolo cavo.
 
 
+\chapter{Network Security}
+Siano Alice e Bob due entità che vogliono comunicare in modo sicuro. Cosa vuol dire ciò?
+
+Innaizututto si vuole che solo i veri destinatari possano leggere un messaggio inviato, anche se la comunicazione avviene su un canale insicuro. Alice e Bob vogliono inoltre assicurarsi che le persone con cui stanno comunicando siano effettivamente chi dicono di essere e vogliono che i loro messaggi non vengano alterati in transito.
+
+Dati questi presupposti, identifichiamo le seguenti proprietà desiderabili di una comunicazione sicura:
+\begin{itemize}
+	\item Confidenzialità: Solo Alice e Bob dovrebbero poter leggere il contenuto del messaggio
+	\item Integrità: Alice e Bob vogliono che il contenuto della loro comunicazione non venga alterato in transito
+	\item Autenticazione: I comunicanti devono poter confermare l'identità del loro corrispondente per accertarsi che siano effettivamente chi dicono di essere
+	\item Operational Security: Firewall e sistemi anti-intrusione dovrebbero essere usati per rilevare e fermare attacchi
+\end{itemize}
+
+Senza queste caratteristiche, infatti, un malfattore potrebbe:
+\begin{itemize}
+	\item Intercettare e memorizzare i mesaggi sul canale
+	\item Modificare o eliminare i messaggi o inserirne di nuovi
+\end{itemize}
+che gli consentirebbe di impersonare un'altra entità, rubare informazioni, negare l'acesso alla rete a utenti legittimi ecc...
+
+La crittografia tornerà utile non solo per fornire confidenzialità, ma anche integrità e autenticazione.
+
+\section*{8.2 Principi di crittografia}
+Un messaggio nella sua forma originale è detto plaintext. Una volta criptato per mezzo di un algoritmo di crittografia assumerà il nome di messaggio cifrato che risulta illeggibile agli occhi di un intrusore.
+
+Sommariamente funziona così: se Alice vuole invire un messaggio a Bob, dà $m$, il plaintext, in pasto a un algoritmo di crittografia insieme a una chiave che chiamaremo $K_A$. Denotiamo con $K_A(m)$ il messaggio cifrato. Bob darà in pasto a un algoritmo di decrittografia il messaggio cifrato che ha ricevuto e la sua chiave, $K_B$. Il messaggio così ottenuto sarà il messaggio nella sua forma originale, ovvero $K_B(K_A(m)) = m$.
+
+In un sistema a chiave simmetrica le due chiavi saranno identiche ($K_A = K_B$) e conosciute solo ad Alice e Bob. In un sistema a chiave pubblica si utilizza una coppia di chiavi per ogni interlocutore. Una delle due chiavi è pubblica e fatta conoscere a tutti, mentre l'altra è segreta (solo l'interlocutore che l'ha generata la conosce).
+
+\subsection*{8.2.1 Crittografia a chiave simmetrica}
+Nella crittografia a chiave simmetrica i due interlocutori hanno la stessa chiave ma il problema di questo approccio è che hanno bisogno di un canale sicuro per scambiarsela. Di certo non possono inviarla su un sistema insicuro altrimenti un malfattore potrebbe intercettarla e rendere vana la crittografia
+
+\subsubsection*{Block ciphers}
+In una crittografia a block cipher, un messaggio viene suddiviso in blocchi da $k$ bit. Ogni blocco viene crittografato indipendentemente per mezzo di una tabella di corrispondenza che fa corrispondere ogni possibile valore del blocco in un altro valore. Ad esempio se $k=3$ avremo una tabella grande $8$ righe che farà corrispondere, ad esempio, il valore $110$ in $010$. Queste modalità di cifratura presenta problematiche: se $k$ è troppo piccolo allora viene facilmente bucato; se $k$ è troppo grande, i nodi devono memorizzare una tabella enorme.
+
+Una metodologia oggi utilizzata invece consiste nel suddividere il messaggio in blocchi grandi (ad esempio) $64$ bit. Ogni blocco viene ulteriormente suddiviso in $8$ chunk grandi $8$ bit. Per ogni chunk ci sarà una tabella di corrispondenza grande $2^8$ bit (e quindi ci saranno $8$ tabelle grandi $2^8$, che è molto inferiore a $2^64$). Dopodiché gli $8$ chunk da $8$ bit vengono riassemblati in un unico blocco da $64$ bit. Per aumentare la sicurezza, un permutatore modifica il valore di questi $64$ bit e ripete il ciclo $n$ volte, dando come input all'$n$esimo ciclo il valore di output ottenuto nel $(n-1)$esimo ciclo.
+
+La chiave di decodifica di questo algoritmo sono le 8 tabelle di corrispondenza.
+
+Algoritmi di questo genere sono il DES e l'AES.
+
+\subsection*{8.2.2 Public Key Encryption}
+Per superare le difficoltà della crittografia a chiave simmetrica si è sviluppata la crittografia a chiave pubblica.
+
+Invece di far condividere a Bob e Alice la stessa chiave, affinché Alice possa mandare un messaggio sicuro a Bob, adesso quest'ultimo ha due chiavi: una pubblica, visualizzabile da chiunque e una privata, conosciuta solo a Bob. La notazione $K^{+}_{B}$ si riferice alla chiave pubblica di Bob mentre $K^{-}_{B}$ si riferisce a quella privata.
+
+Alice cifra il messaggio $m$ con la chiave pubblica di Bob, ovvero calcola $K^{+}_{B}(m)$ e gli invia il risultato. Dall'altro capo della comunicazione, Bob usa la sua chiave privata per decifrare il messaggio inviato da Alice, calcolando $K^{-}_{B}(K^{+}_{B}(m))$. In questo modo Alice può inviare un messaggio leggibile solo da Bob senza doversi scambiare alcuna chiave condivisa!
+
+Avremo inoltre che $K^{-}_{B}(K^{+}_{B}(m))$ = $K^{+}_{B}(K^{-}_{B}(m))$ = $m$
+
+Un messaggio cifrato con una chiave può essere decifrato solo e soltanto con l'altra chiave.
+
+La crittografia a chiave pubblica introduce uno svantaggio: poiché la chiave di cifratura è pubblica, chiunque può inviare un messaggio a Bob, incluso qualcuno che si finge essere Alice. Pertanto Bob non ha modo di conoscere se il mittente è davvero chi dice di essere. Nella crittografia a chiave simmetrica questo non avviene perché solo il fatto che il messaggio è stato cifrato con una chiave segreta conosciuta solo ai due implicitamente garantisce che il corrispondente è davvero chi dice di essere.
+
+\section*{8.3 Integrity and Authentication}
+Affinché Bob possa fidarsi del messaggio ricevuto deve verificare
+\begin{enumerate}
+	\item Che il messaggio sia stato originato davvero da Alice (Authentication)
+	\item Il messaggio non è stato modificato in transito (Integrity)
+\end{enumerate}
+
+\subsection*{8.3.1 Cryptographic Hash Functions}
+Una funzione hash prende in input $m$ e calcola una stringa di lunghezza fissa $H(m)$. Inoltre, deve essere studiata affinché sia computazionalmente difficile trovare un $n$ tale che $n \neq m$ ma $H(m) = H(n)$.
+
+Gli algoritmo MD5 e SHA sono le funzioni di hash crittografico più utilizzate.
+\subsection*{8.3.2 Message Authentication Code (MAC)}
+Vediamo come potremmo implementare un meccanismo di integrità dei messaggi:
+\begin{enumerate}
+	\item Alice crea un messaggio $m$ e calcola l'hash $H(m)$
+	\item Alice concatena $H(m)$ al messaggio ottenendo $(m, H(m))$
+	\item Bob riceve $(m,h)$ e calcola $H(m)$. Se $H(m) = h$ allora conclude che va tutto bene 
+\end{enumerate}
+
+Questo ragionamento è piuttosto fallace, infatti, un fuorilegge potrebbe creare un messaggio $m'$, calcolare $H(m')$ e mandare a Bob $(m', H(m'))$ dicendo di essere Alice. Dunque, per implementare correttamente la funzionalità di integrità dei messaggi, Alice e Bob dovrebbero scambiarsi una chiave segreta $s$ denominata chiave di autenticazione. Vediamo come funziona:
+\begin{enumerate}
+	\item Alice crea il messaggio $m$, concatena $s$ a $m$ e calcola la funzione hash $H(m+s)$. $H(m+s)$ viene definito Message Authentication Code (MAC)
+	\item Alice invia a Bob il messaggio $m$ e il MAC, ovvero invia $(m, H(m+s))$
+	\item Bob riceve $(m,h)$ e calcola $H(m+s)$. Se quest'ultimo coincide con $h$ allora conclude che va tutto bene.
+\end{enumerate}
+
+Si noti come non vi è la necessità di adoperare un algoritmo di cifratura se le parti si preoccupino solo dell'integrità ma non della confidenzialità.
+
+Come distribuire la chiave $s$? Semplicemente si può mandare a un nodo cifrandola con la sua chiave pubblica.
+
+\subsection*{8.3.3 Firma digitale}
+Si vuole che sia possibile provare che un documento sia stato firmato da un individuo (verificabilità) e che solo quell'individuo possa averlo fatto (la firma non può essere falsificata).
+
+Si supponga che Bob voglia firmare un documento $m$. Semplicemente usa la sua chiave privata per calcolare $K^{-}_{B}(m)$ in odo che chiunque possa usare $K^{+}_{B}$ per ottenere il documento. Qui l'obiettivo di B non è quello di offuscare il contenuto ma è quello di firmarlo in modo verificabile e infalsificabile.
+
+Alice riceve $(m, K^{-}_{B}(m))$. Per verificare che sia stato Bob a firmare il documento, utilizza la chiave pubblica di B per ottenere $m$. Ovvero fa $K^{+}_{B}(K^{-}_{B}(m))$. Dato che solo Bob può aver utilizzato $K^{-}_{B}$, conclude che sia stato lui a firmarlo.
+
+Si noti che se il messaggio fosse modificato in un modo da ottenere $m'$, si otterrebbe $m' \neq K^{+}_{B}(K^{-}_{B}(m))$ concludendo che la firma non è valida.
+
+In realtà nel mondo reale non si fa davvero così: anziché fare $K^{-}_{B}(m))$ per poi fare $K^{+}_{B}(K^{-}_{B}(m))$ si fa $K^{-}_{B}(H(m)))$ per poi fare $K^{+}_{B}(K^{-}_{B}(H(m)))$, ovverosia si agisce sul risultato della funzione hash dato che è generalmente più piccola di un intero messaggio.
+
+\subsubsection*{Public Key Certification}
 
 
 
 
-
-
-
-\end{document}
+\end{document} 
