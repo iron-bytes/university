@@ -2463,7 +2463,115 @@ Si noti che se il messaggio fosse modificato in un modo da ottenere $m'$, si ott
 In realtà nel mondo reale non si fa davvero così: anziché fare $K^{-}_{B}(m))$ per poi fare $K^{+}_{B}(K^{-}_{B}(m))$ si fa $K^{-}_{B}(H(m)))$ per poi fare $K^{+}_{B}(K^{-}_{B}(H(m)))$, ovverosia si agisce sul risultato della funzione hash dato che è generalmente più piccola di un intero messaggio.
 
 \subsubsection*{Public Key Certification}
+Come certificare che una chiave pubblica appartenga a un'entità specifica? Un'Autorità di Certificazione (CA) si assicura che un'entità è effettivamente chi dice di essere. Una volta assicurato ciò, la CA crea un certificato che associa la chiave pubblica all'entità (identificata per mezzo di un identificatore univoco, come l'indirizzo IP). Il certificato è firmato digitalmente dalla CA.
 
+\section*{8.4 Endpoint Authentication}
+Nella sezione 8.3 abbiamo visto come Bob possa verificare che l'autore di un messaggio ricevuto in qualunque momento passato sia effettivamente Alice. 
+
+Ora vediamo un altro aspetto: come autenticare la controparte in un contesto "in diretta". Lo si fa per mezzo di un protocollo di autenticazione (AP).
+
+\subsubsection*{AP 1}
+L'algoritmo AP1 consiste che Alice dica a Bob di essere Alice. Questo algoritmo è debole in quanto il malintenzionato può semplicemente dire a Bob di essere Alice, anche se non lo è.
+
+\subsubsection*{AP 2}
+L'algoritmo AP2 consiste che Alice dica a Bob di essere Alice. Bob conosce l'indirizzo reale di Alice e lo confronta con l'indirizzo sorgente del messaggio appena ricevuto. Se coincide considera la controparte autenticata. Anche questo protocollo è debole: un malintenzionato potrebbe creare un pacchetto malevole contenente come indirizzo sorgente l'indirizzo reale di Alice. Questa tecnica si chiama IP Spoofing.
+
+\subsubsection*{AP 3}
+AP3 introduce il concetto di password. Alice deve autenticarsi con una password ma il malintenzionato potrebbe semplicemente mettersi in ascolto sulla comunicazione (sniffing) e rilevare la password.
+
+\subsubsection*{AP 3.1}
+Adesso ipotizziamo che la password venga cifrata con una chiave simmetrica. Adesso il malintenzionato non conosce più la password in plaintext, ma cambia poco in quanto egli può effettuare il cosiddetto attacco playback. Si tartta di memorizzare la password cifrata che ha ottenuto mettendosi in ascolto sul canale, memorizzare la password cifrata e presentarla a Bob in un secondo momento. Quest'ultimo penserà incorrettamente che si tratti di Alice.
+
+\subsubsection*{AP 4}
+Introduciamo il concetto di nonce: si tratta di un numero che il protocollo userà solo una volta durante tutta la sua vita.
+
+AP 4 funziona in questo modo:
+\begin{enumerate}
+	\item Alice si annuncia a Bob dicendo di essere Alice
+	\item Bob sceglie un nonce, $R$, e lo invia ad Alice
+	\item Alice critta $R$ usando la chiave simmetrica conosciuta tra i due e invia $K(R)$ a Bob.
+	\item Bob decifra il messaggio e se coincide con $R$ allora si assicura che sta parlando con la "vera" Alice. Il fatto che Alice conosca $K$ la autentica
+\end{enumerate}
+
+Se un malintenzionato registra il pacchetto contenente $K(R)$ e lo reinvia a Bob, questi lo scarterà in quanto risulta già utilizzato.
+
+\section*{8.5 Securing E-mail}
+È possibile offrire servizi di sicurezza a qualunque dei 4 livelli più in alto dello stack. Adesso concentriamoci sul livello applicazione, in particolare sull'email. Uno degli algoritmi più utilizzati in questo contesto è Pretty Good Privacy (PGP).
+
+Supponiamo che Alice e Bob si preoccupino solo della confidenzialità ma non dell'integrità e autenticazione. In questo caso Bob rende la sua chiave pubblica accessibile a chiunque. Alice critta il messaggio verso Bob con la chiave pubblica di Bob, dopodiché glielo invia. Quando Bob riceve il messaggio, lo decritta con la sua chiave privata.
+In realtà cifrare e decifrare lunghi messaggi con le chiavi pubbliche e private è oneroso. Per tale motivo ciò che realmente accade è:
+\begin{enumerate}
+	\item Alice sceglie una chiave simmetrica $K_s$
+	\item Cifra il messaggio $m$ con $K_s$
+	\item Cifra la chiave simmetrica $K_s$ con la chiave pubblica di Bob
+	\item Crea un messaggio $(K_s(m), K^{+}_{B}(K_s))$ e lo invia a Bob (ovvero manda il messaggio cifrato con la chiave simmetrica e manda la chiave simmetrica cifrata con la chiave pubblica di Bob)
+	\item Bob decifra la chiave simmetrica (che è molto più semplice che decifrare $m$) e grazie ad essa decifra il messaggio
+\end{enumerate}
+
+Adesso supponiamo che Alice e Bob non si preoccupino della confidenzialità ma solo dell'autenticazione e integrità dei messaggi (il contenuto del messaggio è dunque visibile a chiunque). Allora avviene quanto segue:
+\begin{enumerate}
+	\item Alice crea il digest del messaggio con $H(m)$
+	\item Cifra $H(m)$ con la propria chiave pubblica: $ K^{-}_{A}(H(m))$
+	\item Crea un messaggio $(m, K^{-}_{A}(H(m)))$ e lo invia a Bob
+	\item Quando Bob riceve il messaggio, calcola $H(m)$ e lo confronta con $K^{+}_{B}(K^{-}_{A}(H(m)))$. Se coincide, allora ha autenticato Alice.
+\end{enumerate}
+
+Adesso pogettiamo un algoritmo che offra confidenzialità, autenticazione e integrità: Alice compie gli stessi passi descritti poc'anzi per quando vuole offrire semplice autenticazione e integrità, ma anziché inviare $(m, K^{-}_{A}(H(m)))$, lo tratta come un semplice messaggio di cui assicurare confidenzialità, pertanto lo cifra con la chiave privata di Bob (in realtà, come abbiamo visto, lo cifra con $K_s$ per poi cifrare $K_s$ con la chiave privata di Bob). Alice quindi usa la crittografia a chiave pubblica/privata due volte: una volta con la propria chiave privata e una volta con la chiave pubblica di Bob. Anche Bob, similmente, la userà due volte.
+
+Perché facciamo questo? Lo facciamo perché se relegassimo la comunicazione solo alla confidenzialità, Bob non avrebbe garanzie che quel messaggio proviene effettivamente da Alice e/o che non sia stato corrotto (sussisterebbero quindi problemi di autenticità e integrità).
+
+\subsubsection*{PGP}
+PGP permette di creare messaggi firmati (e quindi rispettando i principi di autenticità e integrità ma non di confidenzialità) e messaggi segreti (rispettando tutti e tre principi)
+
+\section*{8.6 TLS}
+La versione più avanzata di TCP è denominata TLS (Transport Layer Security) ed è il successore di SSL.
+
+Proprio come TCP, TLS mette a disposizione delle API.
+
+\subsection*{8.6.1 The Big Picture}
+TLS ha tre fasi: handshake, derivazione della chiave e trasferimento dati.
+
+\subsubsection*{Handshake}
+Durante la fase di handshake, il client deve stabilire una connessione TCP con il server, verificare che il server sia davvero chi dice di essere e inviargli una chiave master.
+
+Una volta che la connessione TCP viene normalmente stabilita, il client manda al server un messaggio "TLS Hello". Il server risponde con il proprio certificato che contiene la chive pubblica. Poiché il certificato è stato firmato da una CA, il client conferma che il server è davvero quello che dice di essere. Dopodiché il client genera una chiave master, la critta con la chiave pubblica del server e la invia a quest'ultimo.
+
+\subsubsection*{Derivazione della chiave}
+In teoria si potrebbe utilizzare la chiave master come chiave simmetrica sia per confidenzialità che per autenticità e integrità, ma per questioni di sicurezza di cui non entriamo nel dettaglio, ognuno dei due comunicanti genera quattro chiavi a partire dalla chiave master:
+\begin{itemize}
+	\item $E_A$: Chiave di confidenzialità dal server al client
+	\item $M_A$: Chiave di autenticazione e integrità dal server al client
+	\item $E_B$: Chiave di confidenzialità dal client al server
+	\item $M_B$ Chiave di autenticazione e integrità dal client al server
+\end{itemize}
+
+\subsubsection*{Trasferimento dati}
+Un approccio naturale al trasferimento dati sarebbe quello di far cifrare a TLS il flusso dati "on the fly" e passarlo poi a TCP.
+
+Se facessimo questo, dove metteremmo l'HMAC per il controllo di integrità? Non vogliamo aspettare fino alla fine del flusso TCP per fare ciò. Per ovviare a ciò, TLS rompe il flusso dati in record e associa l'HMAC a ogni record. Successivamente cifra HMAC+record con $M_B$.
+
+\section*{8.9 Firewalls and Intrusion Detection Systems}
+Un firewall è una combinazione di hardwar e software che isola la rete interna di un'organizzazione da Internet, consentendo il passaggio di alcuni pacchetti e bloccandone altri. Tutto il traffico da e verso Internet passa attraverso il firewall. Solo il traffico autorizzato dalle politiche di sicurezza sarà autorizzato a passare. Inoltre è necessario che i firewall siano immuni alla penetrazione.
+
+Esistono tre tipi di firewall: firewall tradizionali, firewall con informazioni di stato e gateway di applicazione.
+
+\subsubsection*{Firewall tradizionali}
+I firewall tradizionali esaminano ogni datagramma, in maniera indipendente l'uno dall'altro e determinano se il datagramma può passare.
+
+\subsubsection*{Firewall con informazioni di stato}
+Se in un firewall tradizionale le decisioni sono basate su ogni pacchetto, in modo indipendente l'uno dall'altro, i firewall con informazioni di tato tracciano le connessioni TCP e usano questa conoscenza per effettuare decisioni.
+
+\subsubsection*{Gateway di applicazione}
+Se un'organizzazione vuole offrire un servizio a uno specifico sottoinsieme di utenti che debbono prima autenticarsi, è necessario utilizzare un gateway di applicazione. Quest'ultimo è un server specifico per ogni applicazione.
+
+\subsubsection*{8.9.2 Intrusion Detection Systems}
+Per individuare alcune tipologie di attacchi è necessario sesguire un "deep packet inspection". I gateway di applicazione lo fanno, ma solo per una specifica applicazione, ma non hanno le stesse caratteristiche degli Intrusion Detection Systems. Questi ultimi, infatti, quando osservano un pacchetto (o una serie di pacchetti) sospetti, o li scartano o li lasciano comunque passare ma avvisando un amministratore.
+
+Gli IDS possono essere categorizzati in due tipologie:
+\begin{itemize}
+	\item Signature-based systems: Ha un database di firme di pacchetti noti per essere sospetti o malevoli
+	\item Anomaly-based systems: Non si basa su una conoscenza pregressa di attacchi ma osserva il traffico e nota quando alcune caratteristiche della rete sono statisticamente inusuali
+\end{itemize}
 
 
 
