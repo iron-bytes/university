@@ -2099,7 +2099,21 @@ Il ricevente fa la somma tra i dati ricevuti e il checksum e controlla che il ri
 Questo approccio viene però spesso fatto dagli algoritmi di livello di trasporto, mentre il livello di collegamento tende a usare CRC. Perché? Perché il livello di trasporto è implementato in software e quindi ha bisogno di algoritmi semplici e veloci, mentre il livello di collegamento permette di effettuare un controllo sugli errori direttamente nella circuitistica hardware che possono effettuare più rapidamente le complesse operazioni di CRC.
 
 \subsection*{6.2.3 Controllo a ridondanza ciclica (CRC)}
-Il controllo a Ridondanza Ciclica è un metodo per rilevare errori ma non correggerli.
+Il controllo a Ridondanza Ciclica è un metodo per rilevare errori ma non per correggerli.
+
+Il messaggio $M$ viene interpretato come un polinomio. Scelto un polinomio $G(x)$ fissato dallo standard di grado $r$, si ottiene $M'$ aggiungendo $r$ zero in coda a $M$.
+
+Si esegue la divisione polinomiale modulo 2 tra $M'(x)$ e $G(x)$, ottenendo un resto $R$.
+
+Il mittente trasmette $T = M|R$ (ovvero concatena $R$ a $M$). Per costruzione, $T$ è divisibile per $G(x)$ con resto $0$.
+
+Il ricevente divide quindi $T(x)$ per $G(x)$ e se vede un resto, vuol dire che si è verificato un errore sui bit.
+
+\textbf{Osservazione:} Quando scriviamo $M$ intendiamo il messaggio (es. \texttt{0110}), quando scriviamo $M(x)$ intendiamo il polinomio ivi associato (es. $x^2+x$). Si tratta dello "stesso oggetto" sotto due punti di vista diversi.
+
+Non dimostreremo la correttezza di CRC.
+
+È un algoritmo molto veloce da fare in hardware.
 
 \section*{6.3 Collegamenti broadcast e protocolli di accesso multiplo}
 Il collegamento punto a punto è costituito da un trasmittente posto a un capo del collegamento e da un unico ricevente all'altra
@@ -2120,7 +2134,7 @@ Possiamo classificare i protocolli di accesso multiplo in una di queste categori
 Un protocollo di accesso multiplo per un canale broadcast con banda $R$ bit al secondo dovrebbe idealmente avere le seguenti caratteristiche:
 \begin{enumerate}
 	\item Quando un solo nodo deve inviare i dati, questo dispone di un throughput pari a $R$ bit al secondo
-	\item Quando $M$ nodi devono inviare dati, questi dispongono di un throughput pari a $R/M$ bit al secondo
+	\item Quando $N$ nodi devono inviare dati, questi dispongono ciascuno di un throughput pari a $R/N$ bit al secondo
 	\item Il protocollo è decentralizzato, in modo che un fallimento di un nodo "master" non causi conseguenze
 	\item Il protocollo è semplice in modo che risulti veloce ed economico
 \end{enumerate}
@@ -2177,7 +2191,7 @@ Calcoliamo ora l'efficienza di questo protocollo. Supponiamo che un nodo abbia s
 La probabilità che un dato slot sia vincente è data dalla probabilità che un solo nodo trasmetta mentre i restanti $N-1$ nodi rimangano inattivi. La probabilità che un solo nodo trasmetta è $p$ mentre la probabilità che $N-1$ nodi non trasmettano è $(1-p)^{N-1}$. Quindi la probabilità di successo di un dato nodo è $p(1-p)^{N-1}$.
 Poiché ci sono $N$ nodi, la probabilità che un nodo arbitrario abbia successo è $Np(1-p)^{N-1}$.
 
-Il valore $p*$ che sostituito a $p$ massimizzi l'espressione è $0,37$. Pertanto, dato che abbiamo il valore $p$ che massimizza l'espressione, impostiamo $0,37$ essere tale probabilità. Ciò però implica che i nodi trasmetteranno informazione utile solo il $37\%$ delle volte e di conseguenza la banda effettivamente utilizzata sarà del $37\%$
+Il valore $p*$ che sostituito a $p$ massimizza l'espressione è $0,37$. Pertanto, impostiamo questo valore come valore di $p$. Ne consegue che i nodi trasmetteranno informazione utile non più del $37\%$ delle volte e quindi la banda effettivamente utilizzata sarà al più del $37\%$
 
 \subsubsection*{ALOHA}
 Slotted ALOHA richiede che tutti i nodi sincronizzino le loro trasmissioni mentre ALOHA è completamente decentralizzato.
@@ -2247,7 +2261,7 @@ Se viene inserito l'indirizzo di broadcast \texttt{FF-FF-FF-FF-FF-FF}, tutte le 
 \subsubsection*{Protocollo per la risoluzione degli indirizzi: ARP}
 Dato che esistono sia indirizzi del livello di rete sia indirizzi a livello di collegamento, si ha la necessità di tradurre l'indirizzo IP in indirizzo MAC.
 
-Ogni nodo ha un modulo ARP che riceve in input un indirizzo IP e restituisce un indirizzo MAC. ARP risolve soltanto gli indirizzi IP per i nodi della stessa sottorete. È in grado di fare ciò per mezzo di una tabella ARP che contiene la corrispondenza degli indirizzi più un valore relativo al TTL che indica quando bisogna eliminare una voce dalla tabella.
+Un modulo ARP è presente su tutti i nodi (non sugli switch): riceve un indirizzo IP e determina l’indirizzo MAC associato. ARP risolve soltanto gli indirizzi IP per i nodi della stessa sottorete. È in grado di fare ciò per mezzo di una tabella ARP che contiene la corrispondenza degli indirizzi più un valore relativo al TTL che indica quando bisogna eliminare una voce dalla tabella.
 
 
 \begin{table}[h!]
