@@ -2099,10 +2099,10 @@ Il ricevente fa la somma tra i dati ricevuti e il checksum e controlla che il ri
 Questo approccio viene però spesso fatto dagli algoritmi di livello di trasporto, mentre il livello di collegamento tende a usare CRC. Perché? Perché il livello di trasporto è implementato in software e quindi ha bisogno di algoritmi semplici e veloci, mentre il livello di collegamento permette di effettuare un controllo sugli errori direttamente nella circuitistica hardware che possono effettuare più rapidamente le complesse operazioni di CRC.
 
 \subsection*{6.2.3 Controllo a ridondanza ciclica (CRC)}
-\textbf{CAPIRE MEGLIO} --- DA SCRIVERE!!
+Il controllo a Ridondanza Ciclica è un metodo per rilevare errori ma non correggerli.
 
 \section*{6.3 Collegamenti broadcast e protocolli di accesso multiplo}
-Il collegamento punto a punto è costituito da un trasmittente posto a un capo del collegamento e da un unico ricevente all'altra.s
+Il collegamento punto a punto è costituito da un trasmittente posto a un capo del collegamento e da un unico ricevente all'altra
 
 Il collegamento broadcast, invece, può avere più trasmittenti e riceventi e si contendono il collegamento condiviso. Quando un nodo diffonde un frame, tutti gli altri nodi ne ricevono una copia.
 
@@ -2177,10 +2177,10 @@ Calcoliamo ora l'efficienza di questo protocollo. Supponiamo che un nodo abbia s
 La probabilità che un dato slot sia vincente è data dalla probabilità che un solo nodo trasmetta mentre i restanti $N-1$ nodi rimangano inattivi. La probabilità che un solo nodo trasmetta è $p$ mentre la probabilità che $N-1$ nodi non trasmettano è $(1-p)^{N-1}$. Quindi la probabilità di successo di un dato nodo è $p(1-p)^{N-1}$.
 Poiché ci sono $N$ nodi, la probabilità che un nodo arbitrario abbia successo è $Np(1-p)^{N-1}$.
 
-Il valore $p*$ che sostituito a $p$ massimissi l'espressione è $0,37$. Pertanto, dato che abbiamo il valore $p$ che massimizza l'espressione, impostiamo $0,37$ essere tale probabilità. Ciò però implica che i nodi trasmetteranno informazione utile solo il $37\%$ delle volte e di conseguenza la banda effettivamente utilizzata sarà del $37\%$
+Il valore $p*$ che sostituito a $p$ massimizzi l'espressione è $0,37$. Pertanto, dato che abbiamo il valore $p$ che massimizza l'espressione, impostiamo $0,37$ essere tale probabilità. Ciò però implica che i nodi trasmetteranno informazione utile solo il $37\%$ delle volte e di conseguenza la banda effettivamente utilizzata sarà del $37\%$
 
 \subsubsection*{ALOHA}
-Slotted ALOHA richiede che tutti i nodi sincronizzino le loro trasmissioni mentre ALOHA è completamete decentralizzato.
+Slotted ALOHA richiede che tutti i nodi sincronizzino le loro trasmissioni mentre ALOHA è completamente decentralizzato.
 
 Supponiamo che tutti i frame abbiano stessa dimensione e supponiamo che la trasmissione di un frame inizi a $t_0$. Ciò implica che nessun altro nodo può cominciare la trasmissione di un frame nell'intervallo $(t_0-1 , t_0]$ né può iniziare nell'intervallo $[t_0, t_0+1]$ altrimenti i due frame si sovrapporrebbero (vedi figura)
 
