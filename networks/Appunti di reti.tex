@@ -2525,9 +2525,9 @@ In realtà cifrare e decifrare lunghi messaggi con le chiavi pubbliche e private
 Adesso supponiamo che Alice e Bob non si preoccupino della confidenzialità ma solo dell'autenticazione e integrità dei messaggi (il contenuto del messaggio è dunque visibile a chiunque). Allora avviene quanto segue:
 \begin{enumerate}
 	\item Alice crea il digest del messaggio con $H(m)$
-	\item Cifra $H(m)$ con la propria chiave pubblica: $ K^{-}_{A}(H(m))$
+	\item Cifra $H(m)$ con la propria chiave privata: $ K^{-}_{A}(H(m))$
 	\item Crea un messaggio $(m, K^{-}_{A}(H(m)))$ e lo invia a Bob
-	\item Quando Bob riceve il messaggio, calcola $H(m)$ e lo confronta con $K^{+}_{B}(K^{-}_{A}(H(m)))$. Se coincide, allora ha autenticato Alice.
+	\item Quando Bob riceve il messaggio, calcola $H(m)$ e lo confronta con $K^{+}_{A}(K^{-}_{A}(H(m)))$. Se coincide, allora ha autenticato Alice.
 \end{enumerate}
 
 Adesso pogettiamo un algoritmo che offra confidenzialità, autenticazione e integrità: Alice compie gli stessi passi descritti poc'anzi per quando vuole offrire semplice autenticazione e integrità, ma anziché inviare $(m, K^{-}_{A}(H(m)))$, lo tratta come un semplice messaggio di cui assicurare confidenzialità, pertanto lo cifra con la chiave privata di Bob (in realtà, come abbiamo visto, lo cifra con $K_s$ per poi cifrare $K_s$ con la chiave privata di Bob). Alice quindi usa la crittografia a chiave pubblica/privata due volte: una volta con la propria chiave privata e una volta con la chiave pubblica di Bob. Anche Bob, similmente, la userà due volte.
@@ -2565,7 +2565,7 @@ Un approccio naturale al trasferimento dati sarebbe quello di far cifrare a TLS 
 Se facessimo questo, dove metteremmo l'HMAC per il controllo di integrità? Non vogliamo aspettare fino alla fine del flusso TCP per fare ciò. Per ovviare a ciò, TLS rompe il flusso dati in record e associa l'HMAC a ogni record. Successivamente cifra HMAC+record con $M_B$.
 
 \section*{8.9 Firewalls and Intrusion Detection Systems}
-Un firewall è una combinazione di hardwar e software che isola la rete interna di un'organizzazione da Internet, consentendo il passaggio di alcuni pacchetti e bloccandone altri. Tutto il traffico da e verso Internet passa attraverso il firewall. Solo il traffico autorizzato dalle politiche di sicurezza sarà autorizzato a passare. Inoltre è necessario che i firewall siano immuni alla penetrazione.
+Un firewall è una combinazione di hardware e software che isola la rete interna di un'organizzazione da Internet, consentendo il passaggio di alcuni pacchetti e bloccandone altri. Tutto il traffico da e verso Internet passa attraverso il firewall. Solo il traffico autorizzato dalle politiche di sicurezza sarà autorizzato a passare. Inoltre è necessario che i firewall siano immuni alla penetrazione.
 
 Esistono tre tipi di firewall: firewall tradizionali, firewall con informazioni di stato e gateway di applicazione.
 
@@ -2573,7 +2573,7 @@ Esistono tre tipi di firewall: firewall tradizionali, firewall con informazioni 
 I firewall tradizionali esaminano ogni datagramma, in maniera indipendente l'uno dall'altro e determinano se il datagramma può passare.
 
 \subsubsection*{Firewall con informazioni di stato}
-Se in un firewall tradizionale le decisioni sono basate su ogni pacchetto, in modo indipendente l'uno dall'altro, i firewall con informazioni di tato tracciano le connessioni TCP e usano questa conoscenza per effettuare decisioni.
+Se in un firewall tradizionale le decisioni sono basate su ogni pacchetto, in modo indipendente l'uno dall'altro, i firewall con informazioni di stato tracciano le connessioni TCP e usano questa conoscenza per effettuare decisioni.
 
 \subsubsection*{Gateway di applicazione}
 Se un'organizzazione vuole offrire un servizio a uno specifico sottoinsieme di utenti che debbono prima autenticarsi, è necessario utilizzare un gateway di applicazione. Quest'ultimo è un server specifico per ogni applicazione.
