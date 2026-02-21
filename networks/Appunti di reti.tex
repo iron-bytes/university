@@ -660,7 +660,7 @@ Il TTL è il time to live e indica il tempo residuo in cache prima di essere rim
 \paragraph{Type=NS}
 \texttt{example.com.       172800 NS    ns1.dns-host.net.} \\ (example.com è un dominio e ns1.dns-host.net è l'hostname del nameserver autoritativo per quel dominio)
 
-\paragraph{Type=NS}
+\paragraph{Type=CNAME}
 \texttt{blog.example.com.  300    CNAME  ghs.googlehosted.com.} \\ (blox.example.com è un alias per ghs.googlehosted.com)
 
 \paragraph{Type=MX}
@@ -730,7 +730,7 @@ Ora facciamo le seguenti osservazioni:
 Mettendo insieme queste considerazioni otteniamo che
 $$  D_{P2P} \geq MAX\left\{ \frac{F}{u_s}, \frac{F}{d_{min}}, \frac{NF}{u_{tot}} \right\}$$
 
-Si può dimostrare che è una disuguaglianza stretta, ovvero è possibile schedulare il trasferimento del file in modo tale che 
+Si può dimostrare che è possibile schedulare il trasferimento del file in modo tale che 
 
 
 $$  D_{P2P} = MAX\left\{ \frac{F}{u_s}, \frac{F}{d_{min}}, \frac{NF}{u_{tot}} \right\}$$
@@ -859,11 +859,11 @@ Quando un segmento arriva all'host di destinazione, il protocollo a livello di t
 Generalmente il lato client usa un numero casuale di porta mentre lato server si assegna un numero di porta specifico. Questo si fa poiché il mittente deve conoscere dove contattare il processo con il quale vuole interagire, mentre il destinatario risponde semplicemente al numero di porta del mittente che ha iniziato la connessione. Si immagini che A voglia instaurare una connessione HTTP con B: allora A contatta B sulla porta 80 e mette nell'intestazione del segmento un numero di porta di origine casuale. Il server B, quando vuole rispondere ad A, farà assumere il valore del numero di porta di destinazione il numero di porta di origine che aveva ricevuto. 
 
 \subsubsection*{Multiplexing e demultiplexing non orientati alla connessione (UDP)}
-Una socket UDP ricevente viene identificata completamente da una coppia che consiste di un indirizzo IP ricevente e un numero di porta ricevente.
+Una socket UDP viene identificata completamente da una coppia che consiste di un indirizzo IP e un numero di porta.
 
 \subsubsection*{Multiplexing e demultiplexing orientati alla connessione (TCP)}
 Una differenza tra una socket UDP e una TCP risiede nel fatto che quest'ultima, a differenza della socket UDP, è identificata da quattro parametri: indirizzo IP di origine, porta di origine, indirizzo IP di destinazione, porta di destinazione.
-Le socket in cui solo due elementi sono noti: IP destinazione e numero di porta destinazione sono adibite a ricevere richieste di connessione. Ad esempio la porta \texttt{(IndirizzoIp, 80, null, null)} serve solo a ricevere richieste di instaurazione di connessione sulla porta 80.
+Le socket in cui solo due elementi sono noti: IP e numero di porta sono adibite a ricevere richieste di connessione. Ad esempio la porta \texttt{(IndirizzoIp, 80, null, null)} serve solo a ricevere richieste di instaurazione di connessione sulla porta 80.
 
 Ne consegue che lato ricevente, a fronte di tutti i parametri che restano uguali tranne l'inidirzzo IP o numero di porta mittente, i pacchetti verrano rediretti a un altro processo.
 
@@ -874,7 +874,7 @@ Perché si fa così? Perché TCP è orientato alla connessione e deve poter dist
 	\centering
 	\begin{tabular}{|c|c|c|c|}
 		\hline
-		\textbf{Client IP} & \textbf{Client Porta} & \textbf{Server IP} & \textbf{Server Porta} \\
+		\textbf{IP Origine} & \textbf{Porta Origine} & \textbf{IP Destinazione} & \textbf{Porta Destinazione} \\
 		\hline
 		10.0.0.2 & 50000 & 93.184.216.34 & 80 \\
 		10.0.0.3 & 50000 & 93.184.216.34 & 80 \\
@@ -1027,13 +1027,29 @@ Questa FSM è molto simile a RDT 2.0 ma ha il doppio degli stati per gestire il 
 	\item (F) Pacchetto numero 1 ricevuto con successo, manda ACK e manda i dati al protocollo superiore
 \end{itemize}
 
-\subsubsection*{Trasferimento dati affidabile su un canale con perdite ed errori sui bit: rdt 3.0}
+\subsubsection*{Trasferimento dati affidabile su un canale con perdite ed errori sui bit: RDR 3.0}
 Supponiamo ora che il canale di trasmissione, oltre a danneggiare i pacchetti, possa anche perderli.
 
 Il protocollo deve preoccuparsi ora di due aspetti aggiuntivi: come rilevare lo smarrimento di pacchetti e cosa fare quando ciò avviene. Per gestire il primo problema assegneremo al mittente l'onere di rilevare e risolvere la perdita di pacchetti. Supponiamo che il mittente spedisca un pacchetto dati e che questo oppure l'acknowledgment di ritorno vada smarrito. In entrambi i casi il mittente non otterrà alcuna risposta da parte del destinatario. Se il mittente è disposto ad attendere un tempo sufficiente per essere certo dello smarrimento del pacchetto, può semplicemente ritrasmettere il pacchetto dati.
 Notiamo che il mittente potrebbe ritrasmettere un pacchetto perché esso o l'ACK di ritorno ha sperimentato un ritardo notevolmente lungo ma non è andato perso. Ciò permette che dei pacchetti vengano duplicati. Dunque il mittente non sa se un pacchetto  dati sia andato perduto, se sia stato smarrito un ACK o se uno dei due ha semplicemente subito un ritardo. In tutti questi casi l'azione intrapresa è sempre la stessa: ritrasmettere.
 
 Questo meccanismo richiede di introdurre quindi un timer in grado di segnalare al mittente l'avvenuta scadenza di un dato lasso di tempo. Il mittente dovrà quindi essere in grado di (1) inizializzare il contatore ogni volta che invia un pacchetto (sia che si tratti di un primo invio sia che si tratti di una ritrasmissione) (2) di rispondere a un interrupt generato dal timer con l'azione appropriata e (3) di fermare il contatore.
+
+\subsubsection*{Recap di RDT}
+\textbf{RDT 1.0:} Il canale sottostante è perfettamente affidabile
+\\
+\textbf{RDT 2.0:} Il canale sottostante non è affidabile quindi introduciamo ACK e NAK. Il problema di RDT 2.0 è che anche gli ACK e i NAK possono essere corrotti
+\\
+\textbf{RDT 2.1:} Per ovviare ai problemi di RDT 2.0 facciamo in modo che il mittente ritrasmetta l'ultimo pacchetto quando riceve un ACK o un NAK corrotto.
+\\
+Notiamo però quanto segue:
+\begin{itemize}
+	\item Il destinatario manda un ACK che arriva corrotto al mittente. A questo punto il destinatario si aspetta il segmento (n+1)-esimo ma riceverà il segmento n-esimo
+	\item Il destinatario manda un NAK che non arriva al mittente. A questo punto il destinatario si aspetta il segmento n-esimo ma riceve il segmento (n+1)-esimo
+\end{itemize}
+Per ovviare a ciò usiamo i numeri di sequenza
+\\
+\textbf{RDT 3.0:} Se i pacchetti vanno persi abbiamo bisogno di un timer
 
 \subsection*{3.4.2 Protocolli per il trasferimento dati affidabile con pipeline}
 RDT 3.0 funziona ma si tratta di un protocollo stop-and-wait e pertanto molto lento.
@@ -1108,6 +1124,8 @@ Il destinatario invia un ACK per i pacchetti ricevuti sia in ordine sia fuori se
 
 Se il destinatario si aspetta il pacchetto $n$ e arriva correttamente il pacchetto $n$, la finestra si muove in avanti di 1. Se il destinatario si aspetta il pacchetto $n$ e arriva $n+t$, memorizza $n+t$ nel buffer ma non sposta avanti la finestra. La sposterà solo quando arrivano tutti gli altri pacchetti da $n$ a $n+t-1$ (\texttt{base} assumerà il valore di $n+t+1$).
 
+In altre parole, il mittente SR manda avanti la finestra quando riceve un ACK per \texttt{base}. Il ricevente SR manda avanti la finestra quando riceve il pacchetto che si aspetta di ricevere corretto e in ordine.
+
 Le finestre del mittente e del destinatario potrebbero non coincidere, caso in cui il destinatario invia un ACK e quindi la sua finestra si sposta, ma non arriva al mittente. È pertanto fondamentale che $N$ sia minore o uguale alla metà dei numeri possibili di sequenza in quanto se ciò non fosse il caso verrebbero immessi sulla rete pacchetti distinti ma con identico numero di sequenza, causando errori ed incomprensioni.
 
 Nei documenti digitali allegati vi è una cartella denominata "SelectiveRepeatProtocol" nel quale è presente una simulazione interattiva.
@@ -1156,6 +1174,8 @@ Il numero di acknowledgment che l'host A scrive nei propri segmenti è il numero
 \end{itemize}
 
 Dato che TCP effettua l'acknowledgment solo dei byte fino al primo byte mancante nel flusso, si dice che tale protocollo offra acknowledgment cumulativi. Per fare un esempio, inviare ACK 5000 indica che i byte 0-4999 sono arrivati correttamente.
+
+In TCP non si usa un NAK esplicito perché un ACK duplicato è implicitamente un NAK.
 
 C'è una coppia (numero di sequenza, numero di acknowledgment) per il mittente e una coppia (numero di sequenza, numero di acknowledgment) per il destinatario.
 
@@ -1214,7 +1234,7 @@ TCP utilizza un solo timer di ritrasmissione, anche in presenza di più segmenti
 
 Esistono tre eventi che un mittente TCP deve gestire:
 \begin{enumerate}
-	\item Dati provenienti dall'applicazione: TCP li incapsula in uno o più segmenti che vengono successivamente passati a IP
+	\item Dati provenienti dall'applicazione: TCP li incapsula in uno o più segmenti che vengono successivamente passati a IP. Inoltre, avvia il timer.
 	\item Timeout: quando si verifica un timeout, TCP risponde con il segmento che lo ha causato e successivamente resetta il timer. In altre parole ritrasmette il segmento con il più basso numero di sequenza di cui non si è ancora ricevuto l'ACK
 	\item Arrivo del segmento di acknowledgment: TCP usa acknowledgment cumulativi: Pertanto un ACK \texttt{y} conferma la ricezione di tutti i byte precedenti al byte numero \texttt{y}. TCP mantiene la variabile \texttt{base} che rappresenta il numero di sequenza del più vecchio byte che non ha ancora ricevuto un acknowledgment. Conseguentemente \texttt{base - 1} è il numero di sequenza dell'ultimo byte che si sa essere stato ricevuto correttamente (Come in GBN). A questo punto se ci sono altri segmenti in attesa di acknowledgment riavvia il timer. In caso contrario lo ferma.
 \end{enumerate}
@@ -1238,7 +1258,7 @@ Queste sono le azioni intraprese da TCP:
 	\item Arrivo di un segmento con numero di sequenza atteso. Tutti i segmenti fino a questo sono già stati riscontrati: attende 500ms per l'arrivo ordinato di un altro segmento. Se non arriva manda un ACK (ciò consente di avere un ACK cumulativo)
 	\item Arrivo di un segmento con numero di sequenza atteso. C'è un segmento ordinato in attesa di trasmissione dell'ACK (caso 1): Invia immediatamente un ACK cumulativo per entrambi. Caso 1 e caso 2 insieme fanno sì che possano esistere ACK cumulativi ma al massimo per due segmenti insieme.
 	\item Arrivo non ordinato di segmento con numero di sequenza superiore a quello atteso (viene rilevato un buco): Invia immediatamente un ACK duplicato relativo all'ultimo byte correttamente ricevuto.
-	\item Arrivo di segmento che colma parzialmente o completamente un buco: Invia un ACK per questo segmento solo se colma l'estremo sinistro di un buco, altrimenti invia un ACK duplicato relativo all'ultimo byte ricevuto in ordine.
+	\item Arrivo di segmento che colma parzialmente o completamente un buco: Invia un ACK relativo a questo segmento solo se colma l'estremo sinistro di un buco, altrimenti invia un ACK duplicato relativo all'ultimo byte ricevuto in ordine.
 \end{enumerate}
 
 \subsubsection*{GBN o SR?}
@@ -1346,7 +1366,7 @@ L'algoritmo di congestione di TCP, chiamato Reno (RFC 2001 e RFC 5681 di cui il 
 \subsubsection*{Slow start}
 Quando si stabilisce una connessione TCP, il valore di \texttt{cwnd} viene impostato a 1 MSS e si incrementa di 1 MSS ogniqualvolta un segmento trasmesso riceve un ACK  (non viene incrementato ad ACK duplicati). Questo processo ha come effetto una velocità di trasmissione iniziale lenta per poi crescere esponenzialmente.
 
-Cresce esponenzialmente perché dopo la ricezione di un ACK del primo segmento trasmesso potrà trasmetterne due, dopodiché potrà trasmetterne 4,8,16 e così via. Ciò viene fatto per individuare velocemente la capacità della rete
+Cresce esponenzialmente a ogni RTT perché dopo la ricezione di un ACK del primo segmento trasmesso potrà trasmetterne due, dopodiché potrà trasmetterne 4,8,16 e così via. Ciò viene fatto per individuare velocemente la capacità della rete. In altre parole raddoppia a ogni RTT.
 
 Adesso vediamo cosa succede quando c'è un evento di perdita:
 \begin{itemize}
@@ -1368,6 +1388,8 @@ Congestion avoidance termina nei seguenti casi:
 \subsubsection*{Fast recovery}
 
 Fast Recovery non è obbligatorio secondo le specifiche di TCP, ma ne è un miglioramento. Permette infatti di evitare di andare in Slow Start qualora la rete non sia gravemente congestionata, che causerebbe \texttt{cwnd} di nuovo a ritornare a 1 MSS.
+
+Quando siamo in Fast Recovery vogliamo semplicemente ricevere l'ACK del segmento inviato con la ritrasmissione rapida senza ridurre drasticamente la velocità di trasmissione.
 
 Si noti che se arrivano ACK duplicati allora si ha una discrepanza contabile tra il numero di pacchetti "in volo" e quelli effettivamente in volo. Infatti si consideri la seguente disequazione mostrata in precedenza:
 
