@@ -2,7 +2,7 @@
 A set of highly reliable libraries and some C++ theory.
 
 ## Libraries
-In the 'librerie' folder you can find the following libraries written in C++:
+In the `librerie` folder you can find the following libraries written in C++:
 * Library 1: Vector and List
 * Library 2: Stack and Queue (both vector and list representation)
 * Library 3: Binary tree (both vector and linked nodes representation)
@@ -13,5 +13,8 @@ You can test them either by using a menu or by running a simple stress test. The
 
 ## Licence
 This repo is under GPLv3.
+
+## Date of these programs
+The timestamp of these programs do not match the date they were originally created at since I moved the /lasd repository into the /university one. Perform a `git log` to verify the original timestamps to be in the year 2021.
 
 Note: most universities own anti-plagiarism tools, and so does University of Naples Federico II. A copy and paste is highly discouraged.
