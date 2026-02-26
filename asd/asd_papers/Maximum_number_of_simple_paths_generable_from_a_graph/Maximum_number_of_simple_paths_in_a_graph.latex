@@ -1,0 +1,42 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with`a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Maximum number of simple paths generable from a graph}
+\author{Alessandro Ferro}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+I want to give an exact formula that represents the maximum number of simple paths generable from a graph
+\end{abstract}
+
+\section{Formula}
+
+Let $ G = \langle V,E\rangle $ be a directed graph.\
+The maximum number of simple paths generable from $G$ is
+$$\sum_{i=0}^{|V|}\frac{|V|!}{(|V|-i)!}$$
+
+\subsection{Corollary}
+Let $ G = \langle V,E\rangle $ be an undirected graph.\
+The maximum number of simple paths generable from $G$ is
+$$\sum_{i=0}^{|V|}{\frac{|V|!}{i! * (|V|-i)!}}$$
+
+\section{Explaination}
+
+The formula is derived from the number of possible permutations from a set whose cardinality is $|V|$ into a set whose cardinality is $i$.\newline
+If $S$ is a sequence $\langle s_1, s_2, ... , s_i \rangle $ then we can generate $\frac{|V|!}{(|V|-i)!}$ different simple paths. Then we shall sum the number of possible simple paths for any sequence whose length is $0$ to $|V|$.
+
+\end{document}

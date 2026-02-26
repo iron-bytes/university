@@ -1,0 +1,63 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{Linearity Property applied to convergent series}
+\author{Alessandro Ferro}
+\date{May 2022}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+We want to prove that
+$$  \sum \Theta(f(n)) \in \Theta(\sum f(n))  $$
+
+\section{Proof}
+\subsection{Assumptions}
+$$\sum \Theta(f(n))$$
+$$and$$
+$$\Theta(\sum f(n))$$ 
+could also imply that $f(n)$ is not the same function throughout each sum, but variable accordingly the iterator variable of the sum, so we assume that 
+$$\sum \Theta(f(n))$$ 
+means
+$$\Theta(h(n)) + \Theta(g(n)) + ...$$
+(similarly for $\Theta(\sum f(n))$), so it's the most general way.
+
+\subsection{Proof}
+We prove the theorem by proving that $\Theta(h(n)) + \Theta(g(n)) \in \Theta(h(n) + g(n))$.
+\\
+\\
+To simplify the proof, we'll prove that $O(h(n)) + O(g(n)) \in O(h(n) + g(n))$, since proving it for $\Omega$ is specular. The validity of these claims will eventually prove it for $\Theta$.
+\newpage
+So we want to prove
+$$ O(h(n)) + O(g(n)) \in O(h(n) + g(n)) $$
+By definition of $BigO$ we have that\\
+$\exists c_1 > 0, n_1 > 0 \ : \ \forall n \geq n_1, \ h'(n) \leq c_1 h(n) $
+\\
+$\exists c_2 > 0, n_2 > 0 \ : \ \forall n \geq n_2, \ g'(n) \leq c_2 g(n) $
+\\
+Where $h'(n)$ and $g'(n)$ are the anonymous functions contained in $O(h(n))$ and $O(g(n))$.
+\\
+Let $n_3 = MAX(n_1,n_2)$, then
+$$h'(n) + g'(n) \leq c_1h(n) + c_2g(n) \ \forall n \geq n_3$$
+Let $c_3 = MAX(c_1,c_2)$, then
+$$h'(n) + g'(n) \leq c_1h(n) + c_2g(n) \leq c_3(h(n) + g(n)) \ \forall n \geq n_3$$
+$$\implies h'(n) + g'(n) \leq c_3(h(n) + g(n)) \ \forall n \geq n_3$$
+which means that $h'(n) + g'(n) \in O(h(n)+g(n))$
+\\
+$\square$
+
+\section{Notes}
+Most books do an abuse of notation, reporting this theorem as
+$$\sum \Theta(f(n)) = \Theta(\sum f(n))$$
+
+\end{document}
