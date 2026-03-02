@@ -1,4 +1,4 @@
-/*
+/**
  *  Assignment:
  *  Write a S-Program (here implemented, for simplicity, by a program in the C language)
  *  that computes f(x) = 3x.
@@ -8,9 +8,8 @@
  *  other kind of macros.
  */
 
- #include <stdio.h>
-
- void test (int result, int expected, char* name);
+#include <stdio.h>
+#include "test-suite.c"
 
 /// Use the multiplicative macro
 int f_1(int x);
@@ -36,15 +35,6 @@ int main () {
 
     return 0;
  }
-
-void test(int result, int expected, char* name) {
-  if (result == expected) {
-        printf("%s test PASSED \n", name);
-    }
-    else {
-        printf("%s test FAILED (Expected: %d, Received: %d) \n", name, expected, result);
-    }
-}
 
 /// Use the multiplicative macro
 int f_1 (int x) {
