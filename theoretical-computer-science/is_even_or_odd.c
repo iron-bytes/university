@@ -36,6 +36,25 @@ int main () {
     x = 0;
     y = is_even(x);
     test(y, x%2 == 1? 0 : 1, "is_even");
+
+
+
+    x = 2;
+    y = is_even_no_macro(x);
+    test(y, x%2 == 1? 0 : 1, "is_even_no_macro");
+
+    x = 3;
+    y = is_even_no_macro(x);
+    test(y, x%2 == 1? 0 : 1, "is_even_no_macro");
+
+    x = 1;
+    y = is_even_no_macro(x);
+    test(y, x%2 == 1? 0 : 1, "is_even_no_macro");
+
+    x = 0;
+    y = is_even_no_macro(x);
+    test(y, x%2 == 1? 0 : 1, "is_even_no_macro");
+
     return 0;
 }
 
@@ -77,6 +96,7 @@ int is_even (int x) { // This program alters x, but since we are allowing the id
 int is_even_no_macro (int x) {
     int y = 0;
     int z1 = 0;
+    int z2 = 0;
 
     // === BEGIN COPY X INTO Z1 ===
 
@@ -89,7 +109,7 @@ int is_even_no_macro (int x) {
     B:
         x--;
         z1++;
-        z2++; // It is used to restore the value of x
+        z2++; // Z2 is used to restore the value of x
         goto A;
 
     // restore the value of x
@@ -106,10 +126,25 @@ int is_even_no_macro (int x) {
     // === END COPY X INTO Z1 ===
 
     E:
-        if (z2 != 0)
+        if (z1 != 0)
             goto F;
         goto EVEN;
 
     F:
+        // Check if odd
+        z1--;
+        if (z1 != 0)
+            goto G;
+        goto ODD;
+    G:
+        z1--;
+        goto E;
+
+    EVEN:
+        y++;
+        return y; // return should be translated into a "GOTO EXIT" statement in a S-program
+
+    ODD:
+        return y; // return should be translated into a "GOTO EXIT" statement in a S-program
 
 }
